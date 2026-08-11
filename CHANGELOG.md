@@ -1,18 +1,21 @@
 # Changelog
 
-All notable changes to **axiomFramework-Prototype1.0** are documented here.
+## [0.1.0] — Prototype 1.0
 
-## [0.1.0-scaffold] — 2026-08-11
+### Phase 1 — 2026-08-11
 
-### Added
+#### PSS (`axiom-pss`)
+- `normalize` / `normalize_with_language`
+- Trim ends, strip CR, reject empty
+- Heuristic language hint (`ja` / `en`)
 
-- Initial repository scaffold
-- README with Difference Convergence pipeline
-- ROADMAP, POLICY, architecture / prototype_spec / convergence docs
-- Crate placeholders: pss, plp, capsule, acp, dck, runtime
-- Example / test / data / tools directory layout
+#### PLP + PLP-R (`axiom-plp`)
+- Payload version `0.1.1`, protocol `PLP-R/0.1`
+- Dual Hash: `raw_hash` (HashA) / `canonical_hash` (HashB)
+- Deterministic `build_canonical_payload`
+- `project_token_only` — annotations empty, `annotation_status=none`
+- `project_minimal` — ACTION/ENTITY/LOCATION **candidates** only
+- Unit tests: pss 6/6, plp 7/7 PASS
 
-### Notes
-
-- No production behavior claimed yet
-- Milestone remains: Difference Convergence Observation only
+### Scaffold — 2026-08-11
+- Workspace layout, POLICY, ROADMAP, docs
