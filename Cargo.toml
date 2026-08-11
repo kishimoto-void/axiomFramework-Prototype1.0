@@ -1,0 +1,24 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/pss",
+    "crates/plp",
+    "crates/capsule",
+    "crates/acp",
+    "crates/dck",
+    "crates/runtime",
+]
+default-members = ["crates/runtime"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["kishimoto-void"]
+repository = "https://github.com/kishimoto-void/axiomFramework-Prototype1.0"
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+thiserror = "1"
