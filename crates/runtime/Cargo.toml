@@ -2,7 +2,7 @@
 name = "axiom-runtime"
 version.workspace = true
 edition.workspace = true
-license.workspace = true
+license-file.workspace = true
 description = "AXIOM Prototype 1.0 — runtime"
 publish = false
 

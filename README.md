@@ -1,8 +1,9 @@
 # AXIOM Framework — Prototype 1.0
 
 **Milestone**: Difference Convergence Observation  
-**Status**: Scaffold / Design-locked  
+**Status**: Phase 1 complete (PSS + PLP + PLP-R) / Design-locked  
 **Date**: 2026-08-11  
+**License**: [AXIOM Framework Research License v1.0](./LICENSE) (DCK: MIT)
 
 > 実験は忠実に実際行って
 
@@ -41,6 +42,18 @@ Difference Report
 
 ---
 
+## License
+
+| Component | License |
+|-----------|---------|
+| Repository (PSS, PLP, Capsule, ACP, Runtime, docs) | **AXIOM Framework Research License v1.0** — see [`LICENSE`](./LICENSE) |
+| `axiom-dck` (Difference Convergence Kernel) | **MIT** — see [`crates/dck/LICENSE-MIT`](./crates/dck/LICENSE-MIT) |
+
+Research License allows personal, academic, educational, and non-commercial use with attribution.  
+**Military / harm-oriented / commercial use** requires separate permission (commercial needs a contract).
+
+---
+
 ## Priority order (build in this sequence)
 
 | # | Crate | Role |
@@ -49,7 +62,7 @@ Difference Report
 | 2 | **plp** | State projection (not meaning parsing) |
 | 3 | **capsule** | State storage (A immutable / B projected) |
 | 4 | **acp** | Immutable contract + seal / coordinates |
-| 5 | **dck** | Difference observation |
+| 5 | **dck** | Difference observation (MIT) |
 | 6 | **runtime** | Wire the pipeline end-to-end |
 
 Research lines (PLP-R, Round Consensus, etc.) live in the main Axiom-Framework repo.  
@@ -76,34 +89,18 @@ See `POLICY.md` (shared constitutional rules) and `docs/architecture.md`.
 ```
 axiomFramework-Prototype1.0/
 ├── README.md
-├── LICENSE
+├── LICENSE                 # Research License v1.0
 ├── ROADMAP.md
 ├── CHANGELOG.md
 ├── POLICY.md
 ├── docs/
-│   ├── architecture.md
-│   ├── prototype_spec.md
-│   ├── convergence.md
-│   └── experiments/
 ├── crates/
-│   ├── pss/
-│   ├── plp/
-│   ├── capsule/
-│   ├── acp/
-│   ├── dck/
-│   └── runtime/
+│   ├── pss/ plp/ capsule/ acp/ runtime/   # Research License
+│   └── dck/                               # MIT
 ├── examples/
-│   ├── minimal_pipeline.rs
-│   ├── multi_agent.rs
-│   └── convergence_demo.rs
 ├── tests/
-│   ├── golden_vectors/
-│   ├── integration/
-│   └── convergence/
 ├── data/sample_inputs/
 └── tools/
-    ├── benchmark/
-    └── visualization/
 ```
 
 ---

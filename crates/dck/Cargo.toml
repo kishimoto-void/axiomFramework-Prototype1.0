@@ -2,8 +2,9 @@
 name = "axiom-dck"
 version.workspace = true
 edition.workspace = true
-license.workspace = true
-description = "AXIOM Prototype 1.0 — dck"
+# Research License §7: DCK is separately MIT-licensed
+license = "MIT"
+description = "AXIOM Prototype 1.0 — DCK (Difference Convergence Kernel)"
 publish = false
 
 [dependencies]
