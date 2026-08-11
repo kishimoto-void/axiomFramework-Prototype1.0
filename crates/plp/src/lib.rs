@@ -1,80 +1,146 @@
-//! PLP — State Projection (Prototype 1.0)
+//! PLP — State Projection (Prototype 1.0 Phase 1)
 //!
-//! Does NOT parse meaning. Projects NormalizedInput → tokens (+ optional candidates).
+//! Incorporates **PLP-R** research contracts:
+//! - PLP does **not** parse meaning
+//! - Annotation = Canonical Projection Candidate (not Semantic Truth)
+//! - Dual Hash: raw_hash (HashA) / canonical_hash (HashB)
+//! - TokenOnlyProjector (baseline) + MinimalProjector (demo)
+//! - Deterministic canonical serialization for Golden locks
+//!
+//! Payload version (hash-relevant): `0.1.1`
+//!
+//! 実験は忠実に実際行って
 
-use axiom_pss::NormalizedInput;
+mod hash_ser;
+mod project;
+
+pub use hash_ser::{build_canonical_payload, dual_hash, sha256_hex};
+pub use project::{
+    project_minimal, project_text_minimal, project_text_token_only, project_token_only,
+    ProjectOptions,
+};
+
 use serde::{Deserialize, Serialize};
-use sha2::{Digest, Sha256};
+use std::collections::BTreeMap;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub struct CanonicalState {
-    pub version: String,
-    pub language: String,
-    pub tokens: Vec<String>,
-    /// Projection candidates only — never semantic truth claims.
-    pub annotations: Vec<Annotation>,
+/// Payload version frozen for Golden vectors (≠ crate version).
+pub const PAYLOAD_VERSION: &str = "0.1.1";
+pub const PROTOCOL: &str = "PLP-R/0.1";
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum AnnotationKind {
+    Entity,
+    Action,
+    Location,
+    Relation,
+    Attribute,
+    Constraint,
+}
+
+impl AnnotationKind {
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Entity => "ENTITY",
+            Self::Action => "ACTION",
+            Self::Location => "LOCATION",
+            Self::Relation => "RELATION",
+            Self::Attribute => "ATTRIBUTE",
+            Self::Constraint => "CONSTRAINT",
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Annotation {
     pub kind: String,
     pub value: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub key: Option<String>,
+}
+
+impl Annotation {
+    pub fn new(kind: AnnotationKind, value: impl Into<String>) -> Self {
+        Self {
+            kind: kind.as_str().into(),
+            value: value.into(),
+            key: None,
+        }
+    }
+
+    pub fn with_key(
+        kind: AnnotationKind,
+        value: impl Into<String>,
+        key: impl Into<String>,
+    ) -> Self {
+        Self {
+            kind: kind.as_str().into(),
+            value: value.into(),
+            key: Some(key.into()),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct CanonicalState {
+    pub version: String,
+    pub language: String,
+    pub tokens: Vec<String>,
+    pub annotations: Vec<Annotation>,
+    pub meta: BTreeMap<String, String>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub struct ProjectionHeader {
+    pub protocol: String,
+    pub version: String,
+    pub capsule_id: String,
+    pub parent_id: Option<String>,
+    pub clock: u64,
+    pub sequence: u64,
+    pub timestamp_ns: u64,
+    pub source: String,
+    pub hash_algorithm: String,
+}
+
+impl Default for ProjectionHeader {
+    fn default() -> Self {
+        Self {
+            protocol: PROTOCOL.into(),
+            version: PAYLOAD_VERSION.into(),
+            capsule_id: String::new(),
+            parent_id: None,
+            clock: 0,
+            sequence: 0,
+            timestamp_ns: 0,
+            source: "plp-r".into(),
+            hash_algorithm: "sha256".into(),
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub struct Projection {
+    pub header: ProjectionHeader,
     pub raw_text: String,
     pub canonical: CanonicalState,
     pub raw_hash: String,
     pub canonical_hash: String,
 }
 
-fn sha256_hex(data: &[u8]) -> String {
-    let mut h = Sha256::new();
-    h.update(data);
-    format!("{:x}", h.finalize())
-}
-
-fn split_tokens(text: &str, language: &str) -> Vec<String> {
-    let seps = " \t\n\r。、．，,!?！？";
-    let mut parts = Vec::new();
-    let mut buf = String::new();
-    for ch in text.chars() {
-        if seps.contains(ch) || ch.is_whitespace() {
-            if !buf.is_empty() {
-                parts.push(std::mem::take(&mut buf));
-            }
-        } else {
-            buf.push(ch);
-        }
+impl Projection {
+    pub fn hash_a(&self) -> &str {
+        &self.raw_hash
     }
-    if !buf.is_empty() {
-        parts.push(buf);
-    }
-    if language == "en" {
-        parts.into_iter().map(|s| s.to_lowercase()).collect()
-    } else {
-        parts
+    pub fn hash_b(&self) -> &str {
+        &self.canonical_hash
     }
 }
 
-/// Token-only projector (baseline). annotations always empty.
-pub fn project_token_only(input: &NormalizedInput) -> Projection {
-    let language = input.language_hint.clone().unwrap_or_else(|| "en".into());
-    let tokens = split_tokens(&input.text, &language);
-    let canonical = CanonicalState {
-        version: "0.1.0".into(),
-        language,
-        tokens,
-        annotations: vec![],
-    };
-    let canon_bytes = serde_json::to_vec(&canonical).expect("serialize");
-    Projection {
-        raw_text: input.text.clone(),
-        raw_hash: sha256_hex(input.text.as_bytes()),
-        canonical_hash: sha256_hex(&canon_bytes),
-        canonical,
-    }
+#[derive(Debug, thiserror::Error, PartialEq, Eq)]
+pub enum PlpError {
+    #[error("empty input")]
+    EmptyInput,
 }
 
 #[cfg(test)]
@@ -83,12 +149,81 @@ mod tests {
     use axiom_pss::normalize;
 
     #[test]
-    fn deterministic() {
+    fn token_only_deterministic() {
         let n = normalize("Hello World").unwrap();
-        let a = project_token_only(&n);
-        let b = project_token_only(&n);
+        let opts = ProjectOptions::with_id("t1");
+        let a = project_token_only(&n, opts.clone()).unwrap();
+        let b = project_token_only(&n, opts).unwrap();
         assert_eq!(a.raw_hash, b.raw_hash);
         assert_eq!(a.canonical_hash, b.canonical_hash);
         assert!(a.canonical.annotations.is_empty());
+        assert_eq!(
+            a.canonical.meta.get("annotation_status").map(|s| s.as_str()),
+            Some("none")
+        );
+        assert_eq!(a.canonical.version, PAYLOAD_VERSION);
+    }
+
+    #[test]
+    fn token_only_en_tokens_lowercased() {
+        let n = normalize("Enable Review").unwrap();
+        let p = project_token_only(&n, ProjectOptions::with_id("x")).unwrap();
+        assert_eq!(p.canonical.tokens, vec!["enable", "review"]);
+        assert_eq!(p.canonical.language, "en");
+    }
+
+    #[test]
+    fn ja_language_and_entity_candidate() {
+        let n = normalize("猫が机の上で寝ている").unwrap();
+        let p = project_minimal(&n, ProjectOptions::with_id("ja1")).unwrap();
+        assert_eq!(p.canonical.language, "ja");
+        assert!(p.canonical.tokens.len() >= 1);
+        assert_eq!(
+            p.canonical.meta.get("annotation_status").map(|s| s.as_str()),
+            Some("canonical_projection_candidate")
+        );
+    }
+
+    #[test]
+    fn minimal_action_candidate() {
+        let n = normalize("Enable review bot").unwrap();
+        let p = project_minimal(&n, ProjectOptions::with_id("m1")).unwrap();
+        assert!(
+            p.canonical
+                .annotations
+                .iter()
+                .any(|a| a.kind == "ACTION" && a.value == "enable"),
+            "expected ACTION enable, got {:?}",
+            p.canonical.annotations
+        );
+    }
+
+    #[test]
+    fn different_capsule_id_same_raw_semantic_class() {
+        let n = normalize("same text").unwrap();
+        let a = project_token_only(&n, ProjectOptions::with_id("a")).unwrap();
+        let b = project_token_only(&n, ProjectOptions::with_id("b")).unwrap();
+        assert_eq!(a.raw_hash, b.raw_hash);
+        assert_ne!(a.canonical_hash, b.canonical_hash);
+    }
+
+    #[test]
+    fn empty_errors() {
+        let n = axiom_pss::NormalizedInput {
+            text: "  ".into(),
+            language_hint: Some("en".into()),
+            encoding: "utf-8".into(),
+        };
+        assert_eq!(
+            project_token_only(&n, ProjectOptions::default()).unwrap_err(),
+            PlpError::EmptyInput
+        );
+    }
+
+    #[test]
+    fn one_shot_helpers() {
+        let p = project_text_token_only("hello", ProjectOptions::with_id("z")).unwrap();
+        assert_eq!(p.hash_a().len(), 64);
+        assert_eq!(p.hash_b().len(), 64);
     }
 }
