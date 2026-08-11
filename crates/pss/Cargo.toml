@@ -1,0 +1,13 @@
+[package]
+name = "axiom-pss"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "AXIOM Prototype 1.0 — pss"
+publish = false
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+thiserror = { workspace = true }

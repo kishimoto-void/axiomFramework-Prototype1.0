@@ -1,0 +1,18 @@
+[package]
+name = "axiom-runtime"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "AXIOM Prototype 1.0 — runtime"
+publish = false
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+thiserror = { workspace = true }
+axiom-pss = { path = "../pss" }
+axiom-plp = { path = "../plp" }
+axiom-capsule = { path = "../capsule" }
+axiom-acp = { path = "../acp" }
+axiom-dck = { path = "../dck" }
