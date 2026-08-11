@@ -14,11 +14,14 @@
 - [x] Workspace `Cargo.toml`
 - [x] Crate stubs with public API outlines
 
-## Phase 1 — PSS + PLP
+## Phase 1 — PSS + PLP + PLP-R  ✅
 
-- [ ] PSS: normalize raw input (encoding, whitespace policy, language hint)
-- [ ] PLP: TokenOnlyProjector (baseline) + MinimalProjector (demo)
-- [ ] Golden vectors for projection hashes
+- [x] PSS: normalize raw input (encoding, whitespace policy, language hint, CR strip)
+- [x] PLP-R contracts in `axiom-plp`: Dual Hash, annotation candidates, payload `0.1.1`
+- [x] TokenOnlyProjector (baseline) + MinimalProjector (demo)
+- [x] Deterministic `build_canonical_payload` for Golden locks
+- [x] Unit tests: axiom-pss 6/6 · axiom-plp 7/7
+- [ ] Golden vector files under `tests/golden_vectors/` (lock hashes next)
 
 ## Phase 2 — Capsule + ACP
 
