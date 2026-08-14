@@ -9,6 +9,7 @@ members = [
     "crates/runtime",
     "crates/lrp",
     "crates/plp-capsule",
+    "crates/pss-spec",
 ]
 default-members = ["crates/runtime"]
 
