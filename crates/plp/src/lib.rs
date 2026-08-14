@@ -187,7 +187,7 @@ mod tests {
         let n = normalize("猫が机の上で寝ている").unwrap();
         let p = project_minimal(&n, ProjectOptions::with_id("ja1")).unwrap();
         assert_eq!(p.canonical.language, "ja");
-        assert!(p.canonical.tokens.len() >= 1);
+        assert!(!p.canonical.tokens.is_empty());
         assert_eq!(
             p.canonical.meta.get("annotation_status").map(|s| s.as_str()),
             Some("canonical_projection_candidate")
