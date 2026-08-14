@@ -2,6 +2,18 @@
 
 ## [0.1.0] — Prototype 1.0
 
+### PLP Capsule v1.3.0 — 2026-08-14
+
+#### `axiom-plp-capsule`
+- Streaming canonical content hash (`Write + ?Sized` fixed for `dyn Write`)
+- Observer / SchemaProvider / CapabilityRegistry
+- Zero-alloc ObsKey stable key + delta construction
+- HashAlgorithm trait (sha2 default, blake3 optional)
+- Golden tests + non-finite rejection + dyn-write regression test
+- Compile/robustness fixes only — golden layout unchanged
+
+> Existing `axiom-capsule` (Prototype A/B dual-hash) remains the Phase 1–2 core path.
+
 ### LRP Kernel — 2026-08-14
 
 #### LRP (`axiom-lrp`) v2.0.0-rfc-kernel
