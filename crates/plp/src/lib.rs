@@ -1,23 +1,31 @@
-//! PLP — State Projection (Prototype 1.0 Phase 1)
+//! PLP — State Projection (Prototype 1.0) + PLP-R research contracts
 //!
-//! Incorporates **PLP-R** research contracts:
+//! Incorporates **PLP-R** from Axiom-Framework research line:
 //! - PLP does **not** parse meaning
 //! - Annotation = Canonical Projection Candidate (not Semantic Truth)
 //! - Dual Hash: raw_hash (HashA) / canonical_hash (HashB)
 //! - TokenOnlyProjector (baseline) + MinimalProjector (demo)
 //! - Deterministic canonical serialization for Golden locks
+//! - DifferenceMetrics (Canonical-only) + Monitor (Continue / AskUser / Abort)
 //!
 //! Payload version (hash-relevant): `0.1.1`
+//! Research package version: `0.1.2`
 //!
 //! 実験は忠実に実際行って
 
 mod hash_ser;
 mod project;
+mod diff;
+mod monitor;
 
 pub use hash_ser::{build_canonical_payload, dual_hash, sha256_hex};
 pub use project::{
     project_minimal, project_text_minimal, project_text_token_only, project_token_only,
     ProjectOptions,
+};
+pub use diff::{diff_canonical, diff_projections, DifferenceMetrics};
+pub use monitor::{
+    monitor_decide, monitor_decide_default, MonitorDecision, MonitorDecisionKind,
 };
 
 use serde::{Deserialize, Serialize};
@@ -26,6 +34,8 @@ use std::collections::BTreeMap;
 /// Payload version frozen for Golden vectors (≠ crate version).
 pub const PAYLOAD_VERSION: &str = "0.1.1";
 pub const PROTOCOL: &str = "PLP-R/0.1";
+/// Research package version (docs / demos).
+pub const RESEARCH_VERSION: &str = "0.1.2";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
@@ -225,5 +235,17 @@ mod tests {
         let p = project_text_token_only("hello", ProjectOptions::with_id("z")).unwrap();
         assert_eq!(p.hash_a().len(), 64);
         assert_eq!(p.hash_b().len(), 64);
+    }
+
+    #[test]
+    fn monitor_on_projection_diff() {
+        let n = normalize("Enable review bot").unwrap();
+        let a = project_minimal(&n, ProjectOptions::with_id("a")).unwrap();
+        let b = project_token_only(&n, ProjectOptions::with_id("a")).unwrap();
+        let m = diff_projections(&a, &b);
+        let d = monitor_decide_default(&m, true);
+        if m.divergence > 0.0 {
+            assert_eq!(d.kind, MonitorDecisionKind::AskUser);
+        }
     }
 }
