@@ -2,6 +2,18 @@
 
 ## [0.1.0] — Prototype 1.0
 
+### PSS Spec — 2026-08-14
+
+#### `axiom-pss-spec` v1.0.0-rc1
+- Full Problem Specification Standard (ProblemSpecification + ProblemBuilder)
+- Mission / SubMission / Knowledge / Constraints / Scope
+- ThinkingProfile / PredictionPolicy / EvaluationCriteria
+- Phase gates (Clarify / Confirm / Answer) + GateResult
+- ValidationReport + compile_for_generic adapter
+- Deterministic / Unique ID modes + comprehensive unit tests
+
+> Existing `axiom-pss` (Phase 1 input normalizer) is unchanged.
+
 ### PLP Capsule v1.3.0 — 2026-08-14
 
 #### `axiom-plp-capsule`
