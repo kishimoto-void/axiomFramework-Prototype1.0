@@ -2,8 +2,8 @@
 name = "axiom-pss"
 version.workspace = true
 edition.workspace = true
-license-file.workspace = true
-description = "AXIOM Prototype 1.0 — PSS input normalization"
+license = "MIT"
+description = "AXIOM — PSS input normalization (MIT)"
 publish = false
 
 [dependencies]

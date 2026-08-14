@@ -17,7 +17,8 @@ default-members = ["crates/runtime"]
 version = "0.1.0"
 edition = "2021"
 # Root LICENSE = AXIOM Framework Research License v1.0
-# (DCK crate overrides with MIT — see crates/dck/Cargo.toml)
+# MIT components: axiom-pss, axiom-pss-spec, axiom-dck (see each crate LICENSE-MIT)
+# Research License: ACP, PLP, Capsule, LRP, Runtime, plp-capsule
 license-file = "LICENSE"
 authors = ["kishimoto-void"]
 repository = "https://github.com/kishimoto-void/axiomFramework-Prototype1.0"
@@ -33,3 +34,4 @@ itoa = "1"
 hex = "0.4"
 uuid = { version = "1", features = ["v4"] }
 blake3 = "1"
+time = { version = "0.3", default-features = false, features = ["parsing", "formatting"] }

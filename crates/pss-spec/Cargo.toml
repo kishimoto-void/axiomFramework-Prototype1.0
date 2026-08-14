@@ -2,8 +2,8 @@
 name = "axiom-pss-spec"
 version = "1.0.0-rc1"
 edition.workspace = true
-license-file.workspace = true
-description = "Problem Specification Standard (PSS) — Production Reference Implementation for Axiom Framework"
+license = "MIT"
+description = "Problem Specification Standard (PSS) — Production Reference (MIT)"
 publish = false
 
 [dependencies]

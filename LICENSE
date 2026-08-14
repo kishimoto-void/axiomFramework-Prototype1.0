@@ -98,6 +98,7 @@ AXIOM Frameworkは以下の構成要素を含みます。
 - ACP (Axiom Common Protocol)
 - PLP (Particle Language Protocol)
 - Capsule Runtime
+- LRP (Language Runtime Protocol)
 - 関連仕様書および研究成果物
 
 これらは本ライセンスの対象となります。
@@ -106,17 +107,30 @@ AXIOM Frameworkは以下の構成要素を含みます。
 
 ---
 
-7. Separate Components
+7. Separate Components (MIT)
 
-以下のコンポーネントは別ライセンスとして管理されます。
+以下のコンポーネントは MIT License の条件に従います。
 
-DCK (Difference Convergence Kernel)
+- PSS (Problem Specification System) — `axiom-pss` / `axiom-pss-spec`
+- DCK (Difference Convergence Kernel) — `axiom-dck`
 
-DCKはMIT Licenseの条件に従います。
+各 crate 内の LICENSE-MIT を参照してください。
 
 ---
 
-8. Disclaimer
+8. Research-Licensed Components
+
+以下は AXIOM Framework Research License v1.0 の対象です。
+
+- ACP (Axiom Common Protocol) — `axiom-acp`
+- PLP (Particle Language Protocol) — `axiom-plp` / `axiom-plp-capsule`
+- Capsule — `axiom-capsule`
+- LRP (Language Runtime Protocol) — `axiom-lrp`
+- Runtime — `axiom-runtime`
+
+---
+
+9. Disclaimer
 
 本成果物は研究および開発目的で提供されます。
 
@@ -126,7 +140,7 @@ DCKはMIT Licenseの条件に従います。
 
 ---
 
-9. License Changes
+10. License Changes
 
 本ライセンスの変更は、著作権者または正式な管理者によって行われます。
 
@@ -134,7 +148,7 @@ DCKはMIT Licenseの条件に従います。
 
 ---
 
-10. Final Statement
+11. Final Statement
 
 AXIOM Frameworkは、人間と人工知能が安全かつ持続可能に協調するための研究基盤として提供されます。
 
