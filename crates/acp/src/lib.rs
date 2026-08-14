@@ -325,9 +325,11 @@ impl<'a, H: StreamHasher> JcsStreamWriter<'a, H> {
         let mut buf = ryu::Buffer::new();
         let formatted = buf.format_finite(f);
         // JCS: prefer "e" over "e+"
+        // Clippy: sliced_string_as_bytes — prefer as_bytes() once then index
         if let Some(pos) = formatted.find("e+") {
-            self.write_raw(formatted[..pos + 1].as_bytes());
-            self.write_raw(formatted[pos + 2..].as_bytes());
+            let bytes = formatted.as_bytes();
+            self.write_raw(&bytes[..pos + 1]);
+            self.write_raw(&bytes[pos + 2..]);
         } else {
             self.write_raw(formatted.as_bytes());
         }
