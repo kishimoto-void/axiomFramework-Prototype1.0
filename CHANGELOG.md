@@ -1,58 +1,45 @@
 # Changelog
 
-## [0.1.0] — Prototype 1.0
+## [0.1.0] — Prototype 1.0 (Home)
+
+### ACP v1.2.0 + License policy — 2026-08-14
+
+#### `axiom-acp` v1.2.0 (Research License)
+- Stream JCS writer (RFC 8785) + domain-separated hash (`[u8; 32]`)
+- DomainTag const (`STATE` / `GENESIS` / `TRANSITION` / `PROOF` / `FRAME`)
+- AxiomFrame / Genesis / TransitionRecord / ProofEnvelope / AxiomCore
+- Causal chain verification + OnceLock transition hash cache
+- `time` crate RFC 3339 normalize
+- Prototype seal API retained (`contract_from_text` / `seal`)
+
+#### License split (explicit)
+- **MIT**: `axiom-pss`, `axiom-pss-spec`, `axiom-dck` (+ `LICENSE-MIT` per crate)
+- **Research License**: ACP, PLP, Capsule, LRP, Runtime, plp-capsule
+- Root `LICENSE` §7 / §8 updated
 
 ### PSS Spec — 2026-08-14
 
-#### `axiom-pss-spec` v1.0.0-rc1
+#### `axiom-pss-spec` v1.0.0-rc1 (MIT)
 - Full Problem Specification Standard (ProblemSpecification + ProblemBuilder)
 - Mission / SubMission / Knowledge / Constraints / Scope
 - ThinkingProfile / PredictionPolicy / EvaluationCriteria
-- Phase gates (Clarify / Confirm / Answer) + GateResult
-- ValidationReport + compile_for_generic adapter
-- Deterministic / Unique ID modes + comprehensive unit tests
-
-> Existing `axiom-pss` (Phase 1 input normalizer) is unchanged.
+- Phase gates + ValidationReport + compile_for_generic
 
 ### PLP Capsule v1.3.0 — 2026-08-14
 
-#### `axiom-plp-capsule`
-- Streaming canonical content hash (`Write + ?Sized` fixed for `dyn Write`)
-- Observer / SchemaProvider / CapabilityRegistry
-- Zero-alloc ObsKey stable key + delta construction
-- HashAlgorithm trait (sha2 default, blake3 optional)
-- Golden tests + non-finite rejection + dyn-write regression test
-- Compile/robustness fixes only — golden layout unchanged
-
-> Existing `axiom-capsule` (Prototype A/B dual-hash) remains the Phase 1–2 core path.
+#### `axiom-plp-capsule` (Research License)
+- Streaming canonical content hash + Observer / SchemaProvider
+- Zero-alloc ObsKey + delta construction
 
 ### LRP Kernel — 2026-08-14
 
-#### LRP (`axiom-lrp`) v2.0.0-rfc-kernel
-- Deterministic LLM Runtime Kernel (IEEE 754 bit-exact StateHasher)
-- Merkle chained transitions (protocol-version-aware)
-- Capability dependency resolver + RuntimePolicy evaluation
-- TransitionBuilder (`&self` reusable) + ReasoningIntent
-- Plugin system (ValidatorPlugin / ObserverPlugin) with panic recovery
-- Snapshot modes (Full / Delta / Compressed) + full chain verification
-- Unit tests: hash determinism, builder reusability, chain integrity
-
-> Note: LRP is a parallel reasoning runtime. Prototype 1.0 core path (PSS → PLP → Capsule → ACP → DCK) is unchanged.
+#### `axiom-lrp` v2.0.0-rfc-kernel (Research License)
+- Deterministic LLM Runtime Kernel + Merkle chain + Plugin framework
 
 ### Phase 1 — 2026-08-11
 
-#### PSS (`axiom-pss`)
-- `normalize` / `normalize_with_language`
-- Trim ends, strip CR, reject empty
-- Heuristic language hint (`ja` / `en`)
-
-#### PLP + PLP-R (`axiom-plp`)
-- Payload version `0.1.1`, protocol `PLP-R/0.1`
-- Dual Hash: `raw_hash` (HashA) / `canonical_hash` (HashB)
-- Deterministic `build_canonical_payload`
-- `project_token_only` — annotations empty, `annotation_status=none`
-- `project_minimal` — ACTION/ENTITY/LOCATION **candidates** only
-- Unit tests: pss 6/6, plp 7/7 PASS
+#### PSS (`axiom-pss`) / PLP (`axiom-plp`)
+- Input normalize + PLP-R dual hash projection
 
 ### Scaffold — 2026-08-11
 - Workspace layout, POLICY, ROADMAP, docs
