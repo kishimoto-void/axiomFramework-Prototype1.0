@@ -1,7 +1,7 @@
 # AXIOM Framework — Prototype 1.0 (Home)
 
 **Milestone**: Difference Convergence Observation  
-**Status**: Phase 1 + LRP + PLP Capsule + **ACP v1.2.0** + PSS Spec  
+**Status**: **1.0.0** — CTS Full PASS  
 **Date**: 2026-08-14  
 **License**: Research License (core) · MIT (PSS / DCK)
 
@@ -11,74 +11,38 @@
 
 ---
 
-## What this is
-
-**Minimal configuration to demonstrate the core idea of AXIOM.**
-
-Prototype 1.0 completes **one thing**:
-
-> Observe whether differences between projected states can be measured, reported, and (as a design hypothesis) driven toward convergence under an immutable contract.
+## Pipeline
 
 ```
-Input
-  │
-  ▼
-PSS          (normalize input)           — MIT
-  │
-  ▼
-PLP          (project → Canonical State) — Research
-  │
-  ▼
-Capsule      (store Raw + Canonical)     — Research
-  │
-  ▼
-ACP          (seal / Frame / coordinate) — Research (v1.2.0)
-  │
-  ▼
-DCK          (measure difference)        — MIT
-  │
-  ▼
-Difference Report
+Input → PSS → PLP → Capsule → ACP → DCK → Difference Report
 ```
 
-**Parallel**: `axiom-lrp` (LRP Kernel) · `axiom-plp-capsule` · `axiom-pss-spec`
+| Crate | Role | License |
+|-------|------|---------|
+| pss / pss-spec | Normalize + Problem Spec | MIT |
+| plp | State projection (PLP-R) | Research |
+| capsule | A/B dual-hash storage | Research |
+| acp | Seal / Frame / coordinate v1.2.0 | Research |
+| dck | Difference taxonomy v2.3 | MIT |
+| runtime | Wire-up | Research |
 
 ---
 
-## License
+## Conformance (CTS v1.0.0)
 
-| Component | Crate | License |
-|-----------|-------|---------|
-| **PSS** (normalize + Problem Specification) | `axiom-pss` / `axiom-pss-spec` | **MIT** |
-| **DCK** (Difference Convergence Kernel) | `axiom-dck` | **MIT** |
-| **ACP** (Common Protocol v1.2.0) | `axiom-acp` | **Research License** |
-| **PLP** / PLP Capsule | `axiom-plp` / `axiom-plp-capsule` | **Research License** |
-| **Capsule** | `axiom-capsule` | **Research License** |
-| **LRP** | `axiom-lrp` | **Research License** |
-| **Runtime** | `axiom-runtime` | **Research License** |
+```bash
+cargo test -p axiom-plp --test cts_v1
+```
 
-- Research License: 個人・学術・教育・非営利可。軍事・危害目的・商用は別途許諾が必要。
-- 詳細: [`LICENSE`](./LICENSE) · MIT 各 crate の `LICENSE-MIT`
+- Spec: [`CONFORMANCE.md`](./CONFORMANCE.md) · [`VERSIONING.md`](./VERSIONING.md)
+- Levels: **Core** / **Full** / Experimental
+- Latest report: **Full — 14/14 PASS**
+
+CI pass requires: all Full tests · Golden Lock · Determinism ×100 · baseline divergence 0.
 
 ---
 
-## Priority order
-
-| # | Crate | Role | License |
-|---|-------|------|---------|
-| 1 | **pss** | Input normalization | MIT |
-| 2 | **plp** | State projection | Research |
-| 3 | **capsule** | A/B dual-hash storage | Research |
-| 4 | **acp** | Seal + Frame / coordinate (v1.2.0) | Research |
-| 5 | **dck** | Difference observation | MIT |
-| 6 | **runtime** | Pipeline wire-up | Research |
-| — | **lrp** | Reasoning kernel | Research |
-| — | **pss-spec** | Full ProblemSpecification | MIT |
-| — | **plp-capsule** | Production PLP Capsule v1.3.0 | Research |
-
----
-
-## Core principles (from POLICY)
+## Principles (POLICY)
 
 | Principle | Meaning |
 |-----------|---------|
@@ -90,29 +54,8 @@ Difference Report
 
 ---
 
-## Repository layout
-
-```
-axiomFramework-Prototype1.0/
-├── LICENSE                 # Research License v1.0 (+ §7 MIT components)
-├── crates/
-│   ├── pss/ pss-spec/      # MIT
-│   ├── dck/                # MIT
-│   ├── plp/ plp-capsule/   # Research
-│   ├── capsule/            # Research
-│   ├── acp/                # Research (v1.2.0 production)
-│   ├── lrp/                # Research
-│   └── runtime/            # Research
-├── docs/ examples/ tests/
-└── …
-```
-
----
-
 ## Related
 
 - Legacy research mirror: [Axiom-Framework](https://github.com/kishimoto-void/Axiom-Framework)
-
----
 
 *Difference Convergence Observation — Prototype 1.0 is home.*
