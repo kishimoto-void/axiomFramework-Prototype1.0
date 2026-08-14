@@ -1,2 +1,2 @@
-// Temporary: no build-time join while full kernel is restored.
+// Full single-file kernel; no build-time join required.
 fn main() {}
