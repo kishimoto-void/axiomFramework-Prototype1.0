@@ -1,8 +1,9 @@
-//! AXIOM Conformance Test Suite v1.0 — PLP-focused runner
-//! (ACP coordinate uses domain-separated SHA-256 without `time` crate
-//!  so the suite builds on older toolchains.)
+//! AXIOM Conformance Test Suite v1.0.0
 //!
-//! Full 13-test suite for Prototype 1.0.
+//! Prototype gate (no `time` dependency).
+//! See CONFORMANCE.md for levels, tolerances, and CI criteria.
+//!
+//! 実験は忠実に実際行って
 
 use axiom_plp::{
     build_canonical_payload, diff_projections, dual_hash, monitor_decide_default,
@@ -14,13 +15,30 @@ use std::collections::BTreeSet;
 use std::fs;
 use std::path::PathBuf;
 
+/// Locked suite version — do not change without CTS MAJOR bump.
+pub const CTS_VERSION: &str = "1.0.0";
+pub const CTS_NAME: &str = "AXIOM Conformance Test Suite";
+
+/// Float absolute tolerance for reported metrics (hashes remain exact).
+pub const ABSOLUTE_TOLERANCE: f64 = 1e-9;
+
 fn golden_path() -> PathBuf {
-    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../tests/golden_vectors/PLP_R_GOLDEN_LOCK_v0_1.json")
+    PathBuf::from(env!("CARGO_MANIFEST_DIR"))
+        .join("../../tests/golden_vectors/PLP_R_GOLDEN_LOCK_v0_1.json")
 }
 
-fn load_golden() -> serde_json::Value {
+fn load_golden_doc() -> serde_json::Value {
     let raw = fs::read_to_string(golden_path()).expect("golden lock missing");
     serde_json::from_str(&raw).expect("golden JSON")
+}
+
+fn golden_vectors(doc: &serde_json::Value) -> &Vec<serde_json::Value> {
+    if let Some(arr) = doc.as_array() {
+        return arr;
+    }
+    doc.get("vectors")
+        .and_then(|v| v.as_array())
+        .expect("golden must be array or { vectors: [...] }")
 }
 
 fn sha256_hex(data: &[u8]) -> String {
@@ -39,7 +57,6 @@ fn project_min(text: &str, id: &str) -> axiom_plp::Projection {
     project_minimal(&n, ProjectOptions::with_id(id)).unwrap()
 }
 
-/// Minimal ACP-compatible seal (domain tag axiom:v2:proof) without time dep.
 fn seal_proof(contract_hash_a: &str, raw_hash: &str, canonical_hash: &str) -> String {
     let mut material = Vec::new();
     material.extend_from_slice(b"axiom:v2:proof\0");
@@ -58,6 +75,27 @@ fn domain_state_hash(canonical_jsonish: &str) -> String {
     sha256_hex(&material)
 }
 
+fn approx_eq(a: f64, b: f64) -> bool {
+    (a - b).abs() <= ABSOLUTE_TOLERANCE
+}
+
+#[test]
+fn cts_00_version_and_golden_metadata() {
+    assert_eq!(CTS_VERSION, "1.0.0");
+    let doc = load_golden_doc();
+    if doc.as_array().is_none() {
+        assert_eq!(doc["schema_version"], "1.0");
+        assert_eq!(doc["lock_version"], "0.1.0");
+        assert_eq!(doc["cts_version"], "1.0.0");
+        assert_eq!(doc["protocol_version"], "0.1.1");
+        assert_eq!(doc["hash_algorithm"], "sha256");
+        assert!(doc["generated_by"].as_str().unwrap().contains("Prototype"));
+        assert!(doc.get("created_at").is_some());
+    }
+    let vectors = golden_vectors(&doc);
+    assert_eq!(vectors.len(), 4);
+}
+
 #[test]
 fn cts_01_golden_hash() {
     let p1 = project_tok("Enable review bot", "cts-01");
@@ -73,15 +111,15 @@ fn cts_02_golden_vector() {
     assert_eq!(p.canonical.language, "en");
     assert_eq!(p.canonical.tokens, vec!["enable", "review"]);
     assert_eq!(p.canonical.version, PAYLOAD_VERSION);
-    let g = load_golden();
-    assert_eq!(g[0]["id"], "01_en_cat_sleep");
-    assert_eq!(g[0]["canonical_hash"].as_str().unwrap().len(), 64);
+    let doc = load_golden_doc();
+    let v = &golden_vectors(&doc)[0];
+    assert_eq!(v["id"], "01_en_cat_sleep");
+    assert_eq!(v["canonical_hash"].as_str().unwrap().len(), 64);
 }
 
 #[test]
 fn cts_03_golden_coordinate() {
-    let payload = br#"{"a":1,"b":"x"}"#;
-    let h1 = domain_state_hash(std::str::from_utf8(payload).unwrap());
+    let h1 = domain_state_hash(r#"{"a":1,"b":"x"}"#);
     let h2 = domain_state_hash(r#"{"a":1,"b":"x"}"#);
     assert_eq!(h1, h2);
     assert_eq!(h1.len(), 64);
@@ -89,8 +127,8 @@ fn cts_03_golden_coordinate() {
 
 #[test]
 fn cts_04_cross_language_hash() {
-    let g = load_golden();
-    for entry in g.as_array().unwrap() {
+    let doc = load_golden_doc();
+    for entry in golden_vectors(&doc) {
         let id = entry["id"].as_str().unwrap();
         let raw = entry["raw_hash"].as_str().unwrap();
         let can = entry["canonical_hash"].as_str().unwrap();
@@ -103,13 +141,14 @@ fn cts_04_cross_language_hash() {
 
 #[test]
 fn cts_05_cross_language_vector() {
-    let g = load_golden();
-    assert_eq!(g[0]["language"], "en");
+    let doc = load_golden_doc();
+    let vectors = golden_vectors(&doc);
+    assert_eq!(vectors[0]["language"], "en");
     assert_eq!(
-        g[0]["tokens"],
+        vectors[0]["tokens"],
         serde_json::json!(["cat", "sleeps", "on", "table"])
     );
-    assert_eq!(g[1]["language"], "ja");
+    assert_eq!(vectors[1]["language"], "ja");
 }
 
 #[test]
@@ -138,8 +177,8 @@ fn cts_08_difference_baseline() {
     let a = project_min("Enable review bot", "diff-base");
     let b = project_min("Enable review bot", "diff-base");
     let m = diff_projections(&a, &b);
-    assert_eq!(m.divergence, 0.0);
-    assert_eq!(m.overlap_ratio, 1.0);
+    assert!(approx_eq(m.divergence, 0.0));
+    assert!(approx_eq(m.overlap_ratio, 1.0));
     let d = monitor_decide_default(&m, true);
     assert_eq!(d.kind, MonitorDecisionKind::Continue);
 }
@@ -149,9 +188,9 @@ fn cts_09_difference_threshold() {
     let a = project_min("Enable review bot", "th-a");
     let b = project_min("Enable review bots", "th-a");
     let m = diff_projections(&a, &b);
-    assert!((0.0..=1.0).contains(&m.divergence));
+    assert!((-ABSOLUTE_TOLERANCE..=1.0 + ABSOLUTE_TOLERANCE).contains(&m.divergence));
     let d = monitor_decide_default(&m, true);
-    if m.divergence > 0.0 {
+    if m.divergence > ABSOLUTE_TOLERANCE {
         assert_eq!(d.kind, MonitorDecisionKind::AskUser);
     }
 }
@@ -161,7 +200,7 @@ fn cts_10_difference_large_change() {
     let a = project_min("Enable review bot", "lg-a");
     let b = project_min("Disable publish pipeline", "lg-a");
     let m = diff_projections(&a, &b);
-    assert!(a.raw_hash != b.raw_hash || m.divergence > 0.0 || a.canonical_hash != b.canonical_hash);
+    assert!(a.raw_hash != b.raw_hash || m.divergence > ABSOLUTE_TOLERANCE || a.canonical_hash != b.canonical_hash);
 }
 
 #[test]
@@ -181,11 +220,19 @@ fn cts_11_determinism_stress() {
 
 #[test]
 fn cts_12_regression_compatibility() {
-    let g = load_golden();
-    assert_eq!(g.as_array().unwrap().len(), 4);
-    assert!(g[0]["canonical_hash"].as_str().unwrap().starts_with("b130e1ff"));
-    assert!(g[3]["canonical_hash"].as_str().unwrap().starts_with("32b79f86"));
+    let doc = load_golden_doc();
+    let vectors = golden_vectors(&doc);
+    assert_eq!(vectors.len(), 4);
+    assert!(vectors[0]["canonical_hash"]
+        .as_str()
+        .unwrap()
+        .starts_with("b130e1ff"));
+    assert!(vectors[3]["canonical_hash"]
+        .as_str()
+        .unwrap()
+        .starts_with("32b79f86"));
     assert_eq!(PAYLOAD_VERSION, "0.1.1");
+    assert_eq!(CTS_VERSION, "1.0.0");
 }
 
 #[test]
@@ -194,18 +241,18 @@ fn cts_13_end_to_end_pipeline() {
     assert_eq!(n.encoding, "utf-8");
     let proj = project_minimal(&n, ProjectOptions::with_id("e2e-1")).unwrap();
     assert_eq!(proj.hash_a().len(), 64);
-    let raw_h = proj.raw_hash.clone();
-    let can_h = proj.canonical_hash.clone();
     let contract_a = sha256_hex(b"goal: conformance\nsafety: research-only");
-    let proof = seal_proof(&contract_a, &raw_h, &can_h);
+    let proof = seal_proof(&contract_a, &proj.raw_hash, &proj.canonical_hash);
     assert_eq!(proof.len(), 64);
-    let proof2 = seal_proof(&contract_a, &raw_h, &can_h);
-    assert_eq!(proof, proof2);
+    assert_eq!(
+        proof,
+        seal_proof(&contract_a, &proj.raw_hash, &proj.canonical_hash)
+    );
     let same = project_minimal(&n, ProjectOptions::with_id("e2e-1")).unwrap();
     let m0 = diff_projections(&proj, &same);
-    assert_eq!(m0.divergence, 0.0);
+    assert!(approx_eq(m0.divergence, 0.0));
     let n2 = normalize("Disable publish pipeline").unwrap();
     let other = project_minimal(&n2, ProjectOptions::with_id("e2e-2")).unwrap();
     let m1 = diff_projections(&proj, &other);
-    assert!(proj.raw_hash != other.raw_hash || m1.divergence > 0.0);
+    assert!(proj.raw_hash != other.raw_hash || m1.divergence > ABSOLUTE_TOLERANCE);
 }
