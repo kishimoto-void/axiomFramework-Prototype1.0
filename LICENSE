@@ -1,155 +1,50 @@
-AXIOM Framework Research License v1.0
+AXIOM Framework — Prototype License Notice (Provisional)
 
-Copyright (c) 2026 AXIOM Framework Contributors
+Copyright (c) 2026 AXIOM Framework Contributors / kishimoto-void
 
-1. Purpose
+---------------------------------------------------------------------------
+STATUS: FINAL LICENSE NOT YET DETERMINED
+---------------------------------------------------------------------------
 
-AXIOM Framework Research License（以下「本ライセンス」）は、AXIOM Framework、その関連仕様、実装、ドキュメント、および研究成果物の利用条件を定めるものです。
+This repository is published as a research prototype.
 
-本ライセンスは、人工知能、安全な計算基盤、状態管理、知識表現、推論構造、および関連研究の発展を目的としています。
+The final licensing model (for example MIT, Apache-2.0, a custom research
+license, or a dual-license arrangement) has not been chosen. It will be
+decided and published at a stable product release (around v1.x).
 
----
+Until that announcement:
 
-2. Permission Grant
+  1. All rights are reserved by the copyright holders, unless a specific
+     file or subdirectory explicitly states a different grant.
+  2. Intended use of this prototype is personal evaluation, academic study,
+     and non-production experimentation.
+  3. Any other use requires prior written permission from the author.
+  4. Earlier draft license texts that may appear in history or side files
+     are non-binding unless and until reinstated by a stable-release notice.
 
-本ライセンスの条件に従う限り、利用者は以下を自由に行うことができます。
+Rationale for leaving the license open during the Prototype stage:
 
-- 個人利用
-- 学術研究
-- 教育目的での利用
-- 非営利目的での利用
-- 評価、検証、実験
-- 改変および派生研究
+  - Impact of the license choice on adoption and generality is still under
+    evaluation.
+  - The growth path of the project is not fixed.
+  - Early lock-in would make later changes harder.
 
-利用者は、内部研究および研究成果の公開を目的として、本ソフトウェアおよび仕様を利用できます。
+THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
----
+---------------------------------------------------------------------------
+日本語要約
+---------------------------------------------------------------------------
 
-3. Attribution Requirement
+本成果物は研究・プロトタイプ段階です。最終ライセンスは安定版（v1.x 前後）
+で決定・公開します。現時点では、特記なき限り著作権は作者に帰属します。
+個人の評価・学術・非本番実験を想定しています。その他の利用は作者の事前
+許可が必要です。成長方針と汎用性への影響が未確定のため、現段階では
+ライセンスを固定しません。
 
-利用者は、派生物または利用成果物において、以下を保持してください。
-
-- 原著作者表示
-- 本ライセンスへの参照
-- AXIOM Framework由来であることの明示
-
-変更を加えた場合は、変更内容を明示してください。
-
----
-
-4. Restricted Uses
-
-著作権者の事前許可なく、以下の目的で本成果物を利用することを禁止します。
-
-4.1 Military Use
-
-以下を含む軍事目的での利用は禁止されます。
-
-- 兵器システム
-- 攻撃システム
-- 戦闘支援システム
-- 軍事作戦を直接支援するシステム
-- 人的被害を目的または補助する用途
-
----
-
-4.2 Harm-Oriented Use
-
-以下の目的での利用は禁止されます。
-
-- 人間への危害を目的とするシステム
-- 自律的な攻撃判断を目的とするシステム
-- 安全性を意図的に低下させる利用
-
----
-
-4.3 Commercial Use
-
-商業目的での利用には、別途許諾が必要です。
-
-商用利用には、以下を含む個別契約を締結できます。
-
-- 利用範囲
-- 対象製品
-- 安全性要件
-- 技術貢献条件
-- ライセンス条件
-
----
-
-5. Commercial and Institutional Licensing
-
-企業、組織、研究機関による利用については、目的および安全性を確認した上で、個別ライセンスを提供できます。
-
-著作権者は、公益性、安全性、研究貢献その他の要素を考慮し、以下を選択できます。
-
-- 無償利用許諾
-- 有償利用許諾
-- 共同研究契約
-- 技術移転契約
-- 権利移転契約
-
----
-
-6. Specification and Implementation
-
-AXIOM Frameworkは以下の構成要素を含みます。
-
-- ACP (Axiom Common Protocol)
-- PLP (Particle Language Protocol)
-- Capsule Runtime
-- LRP (Language Runtime Protocol)
-- 関連仕様書および研究成果物
-
-これらは本ライセンスの対象となります。
-
-ただし、個別に異なるライセンスを指定されたコンポーネントについては、その指定ライセンスが優先されます。
-
----
-
-7. Separate Components (MIT)
-
-以下のコンポーネントは MIT License の条件に従います。
-
-- PSS (Problem Specification System) — `axiom-pss` / `axiom-pss-spec`
-- DCK (Difference Convergence Kernel) — `axiom-dck`
-
-各 crate 内の LICENSE-MIT を参照してください。
-
----
-
-8. Research-Licensed Components
-
-以下は AXIOM Framework Research License v1.0 の対象です。
-
-- ACP (Axiom Common Protocol) — `axiom-acp`
-- PLP (Particle Language Protocol) — `axiom-plp` / `axiom-plp-capsule`
-- Capsule — `axiom-capsule`
-- LRP (Language Runtime Protocol) — `axiom-lrp`
-- Runtime — `axiom-runtime`
-
----
-
-9. Disclaimer
-
-本成果物は研究および開発目的で提供されます。
-
-本成果物は「現状のまま」提供され、明示または黙示を問わず、いかなる保証もありません。
-
-利用によって発生した損害について、著作者および貢献者は責任を負いません。
-
----
-
-10. License Changes
-
-本ライセンスの変更は、著作権者または正式な管理者によって行われます。
-
-既に許諾された利用権については、適用された条件に従います。
-
----
-
-11. Final Statement
-
-AXIOM Frameworkは、人間と人工知能が安全かつ持続可能に協調するための研究基盤として提供されます。
-
-利用者は、本技術の目的と安全性を尊重して利用してください。
+提供は「現状のまま」であり、いかなる保証もありません。
