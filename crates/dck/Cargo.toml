@@ -4,13 +4,12 @@ version.workspace = true
 edition.workspace = true
 # Research License §7: DCK is separately MIT-licensed
 license = "MIT"
-description = "AXIOM Prototype 1.0 — DCK (Difference Convergence Kernel)"
+description = "AXIOM Prototype 1.0 — DCK v2.3 (Difference Convergence Kernel, dual-hash taxonomy)"
 publish = false
 
 [dependencies]
 serde = { workspace = true }
 serde_json = { workspace = true }
-sha2 = { workspace = true }
 thiserror = { workspace = true }
 axiom-capsule = { path = "../capsule" }
-axiom-acp = { path = "../acp" }
+axiom-plp = { path = "../plp" }
