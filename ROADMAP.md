@@ -39,17 +39,20 @@
 
 ## Phase 2 — Capsule + ACP
 
-- [ ] Capsule A/B layers (Raw + Canonical + Dual Hash)
+- [x] Capsule A/B layers (Raw + Canonical + Dual Hash) — basic `Capsule` present
 - [ ] ACP seal: HashA contract + HashB projected + proof
 - [ ] Domain-separated hashing
 - [ ] Golden vectors including seals
 
-## Phase 3 — DCK + Difference Report
+## Phase 3 — DCK + Difference Report  ✅ taxonomy 2026-08-14
 
-- [ ] DualHashClass (None / Semantic / State / Compound)
-- [ ] DifferenceMetrics (overlap, divergence, added/removed)
-- [ ] Difference Report schema (machine-readable + human summary)
+- [x] DualHashClass (None / Semantic / State / Compound) — **official v2.3**
+- [x] DifferenceKind + ConstraintVerdict (Constraint priority)
+- [x] DifferenceMetrics (overlap, divergence, added/removed)
+- [x] Difference Report schema (`report` / `report_with_constraint`)
+- [x] Capsule bridge: `classify` / `metrics` / `evaluate_capsules`
 - [ ] Convergence experiment harness (log divergence; no guarantee of shrink)
+- [ ] Golden vector files for DCK matrix
 
 ## Phase 4 — Runtime wire-up
 
