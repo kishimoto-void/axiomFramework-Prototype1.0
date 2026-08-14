@@ -6,78 +6,56 @@
 
 ---
 
-## Phase 0 — Scaffold (current)
+## Phase 0 — Scaffold
 
 - [x] Repository structure
 - [x] README pipeline diagram
 - [x] POLICY / architecture / prototype_spec / convergence docs
 - [x] Workspace `Cargo.toml`
-- [x] Crate stubs with public API outlines
 
 ## Phase 1 — PSS + PLP + PLP-R  ✅
 
-- [x] PSS: normalize raw input (encoding, whitespace policy, language hint, CR strip)
-- [x] PLP-R contracts in `axiom-plp`: Dual Hash, annotation candidates, payload `0.1.1`
-- [x] TokenOnlyProjector (baseline) + MinimalProjector (demo)
-- [x] Deterministic `build_canonical_payload` for Golden locks
-- [x] Unit tests: axiom-pss 6/6 · axiom-plp 7/7
-- [ ] Golden vector files under `tests/golden_vectors/` (lock hashes next)
+- [x] PSS: normalize raw input
+- [x] PLP-R contracts in `axiom-plp` (payload `0.1.1`, research `0.1.2`)
+- [x] TokenOnly + Minimal projectors
+- [x] Deterministic `build_canonical_payload`
+- [x] **diff.rs** — Canonical DifferenceMetrics (migrated from Axiom-Framework PLP-R)
+- [x] **monitor.rs** — Continue / AskUser / Abort
+- [x] `docs/plp-r/` research notes migrated
+- [x] `tests/golden_vectors/PLP_R_GOLDEN_LOCK_v0_1.json`
 
-## Phase 1.5 — LRP Kernel (parallel) ✅ 2026-08-14
+## Phase 1.5 — LRP Kernel (parallel) ✅
 
-- [x] `axiom-lrp` crate (v2.0.0-rfc-kernel)
-- [x] IEEE 754 bit-exact StateHasher
-- [x] Merkle chain + version-aware RuntimeHash
-- [x] TransitionBuilder + ReasoningIntent
-- [x] CapabilityResolver + RuntimePolicy
-- [x] Plugin framework (Validator / Observer)
-- [x] Chain + Snapshot verification
-- [x] Unit tests (hash / builder / chain)
-
-> LRP is **not** on the Prototype 1.0 core path (PSS→…→DCK).  
-> It is the deterministic reasoning session kernel for later multi-agent / Round Consensus work.
+- [x] `axiom-lrp` crate (alongside core path)
 
 ## Phase 2 — Capsule + ACP
 
-- [x] Capsule A/B layers (Raw + Canonical + Dual Hash) — basic `Capsule` present
-- [ ] ACP seal: HashA contract + HashB projected + proof
-- [ ] Domain-separated hashing
-- [ ] Golden vectors including seals
+- [x] Capsule A/B basic
+- [ ] ACP seal + domain-separated proof
+- [ ] Golden seals
 
-## Phase 3 — DCK + Difference Report  ✅ taxonomy 2026-08-14
+## Phase 3 — DCK + Difference Report  ✅ taxonomy
 
-- [x] DualHashClass (None / Semantic / State / Compound) — **official v2.3**
-- [x] DifferenceKind + ConstraintVerdict (Constraint priority)
-- [x] DifferenceMetrics (overlap, divergence, added/removed)
-- [x] Difference Report schema (`report` / `report_with_constraint`)
-- [x] Capsule bridge: `classify` / `metrics` / `evaluate_capsules`
-- [ ] Convergence experiment harness (log divergence; no guarantee of shrink)
-- [ ] Golden vector files for DCK matrix
+- [x] Official DCK v2.3 dual-hash taxonomy in `axiom-dck`
+- [x] Capsule bridge report API
+- [ ] Convergence experiment harness
+- [ ] DCK Golden matrix files
 
 ## Phase 4 — Runtime wire-up
 
-- [ ] Linear pipeline: PSS → PLP → Capsule → ACP → DCK → Report
-- [ ] `examples/minimal_pipeline`
-- [ ] `examples/convergence_demo`
-- [ ] Integration tests
+- [ ] PSS → PLP → Capsule → ACP → DCK → Report
+- [ ] examples + integration tests
 
-## Explicitly deferred (after Prototype 1.0)
+## Explicitly deferred
 
-- Multi-agent Round Consensus (Observer rotation)
-- Personality / emotional runtime
-- Production PLP v2 promotion
-- Full cross-language conformance CI
-- LLM Provider adapters
-- LRP ↔ Capsule / ACP tight integration
+- Round Consensus multi-agent runtime
+- Production PLP v1.1.3 replacement (parallel only)
+- Cross-language Golden CI automation
 
 ---
 
-## Build order (do not reorder without reason)
+## Build order
 
 ```
 PSS → PLP → Capsule → ACP → DCK → Runtime
 ```
-
-This order keeps **Input → Difference Report** as one readable story.
-
-LRP lives alongside and does not reorder the above.
