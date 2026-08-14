@@ -2,6 +2,19 @@
 
 ## [0.1.0] — Prototype 1.0
 
+### LRP Kernel — 2026-08-14
+
+#### LRP (`axiom-lrp`) v2.0.0-rfc-kernel
+- Deterministic LLM Runtime Kernel (IEEE 754 bit-exact StateHasher)
+- Merkle chained transitions (protocol-version-aware)
+- Capability dependency resolver + RuntimePolicy evaluation
+- TransitionBuilder (`&self` reusable) + ReasoningIntent
+- Plugin system (ValidatorPlugin / ObserverPlugin) with panic recovery
+- Snapshot modes (Full / Delta / Compressed) + full chain verification
+- Unit tests: hash determinism, builder reusability, chain integrity
+
+> Note: LRP is a parallel reasoning runtime. Prototype 1.0 core path (PSS → PLP → Capsule → ACP → DCK) is unchanged.
+
 ### Phase 1 — 2026-08-11
 
 #### PSS (`axiom-pss`)

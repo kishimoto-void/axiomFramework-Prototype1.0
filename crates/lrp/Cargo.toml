@@ -1,0 +1,14 @@
+[package]
+name = "axiom-lrp"
+version.workspace = true
+edition.workspace = true
+license-file.workspace = true
+description = "AXIOM Prototype 1.0 — LRP Kernel v2.0.0-rfc-kernel (Deterministic LLM Runtime)"
+publish = false
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+thiserror = { workspace = true }
+im = { workspace = true }

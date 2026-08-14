@@ -23,6 +23,20 @@
 - [x] Unit tests: axiom-pss 6/6 · axiom-plp 7/7
 - [ ] Golden vector files under `tests/golden_vectors/` (lock hashes next)
 
+## Phase 1.5 — LRP Kernel (parallel) ✅ 2026-08-14
+
+- [x] `axiom-lrp` crate (v2.0.0-rfc-kernel)
+- [x] IEEE 754 bit-exact StateHasher
+- [x] Merkle chain + version-aware RuntimeHash
+- [x] TransitionBuilder + ReasoningIntent
+- [x] CapabilityResolver + RuntimePolicy
+- [x] Plugin framework (Validator / Observer)
+- [x] Chain + Snapshot verification
+- [x] Unit tests (hash / builder / chain)
+
+> LRP is **not** on the Prototype 1.0 core path (PSS→…→DCK).  
+> It is the deterministic reasoning session kernel for later multi-agent / Round Consensus work.
+
 ## Phase 2 — Capsule + ACP
 
 - [ ] Capsule A/B layers (Raw + Canonical + Dual Hash)
@@ -51,6 +65,7 @@
 - Production PLP v2 promotion
 - Full cross-language conformance CI
 - LLM Provider adapters
+- LRP ↔ Capsule / ACP tight integration
 
 ---
 
@@ -61,3 +76,5 @@ PSS → PLP → Capsule → ACP → DCK → Runtime
 ```
 
 This order keeps **Input → Difference Report** as one readable story.
+
+LRP lives alongside and does not reorder the above.
