@@ -1,11 +1,13 @@
-# AXIOM Framework — Prototype 1.0
+# AXIOM Framework — Prototype 1.0 (Home)
 
 **Milestone**: Difference Convergence Observation  
-**Status**: Phase 1 complete (PSS + PLP + PLP-R) + LRP Kernel v2.0.0-rfc-kernel  
+**Status**: Phase 1 + LRP + PLP Capsule + **ACP v1.2.0** + PSS Spec  
 **Date**: 2026-08-14  
-**License**: [AXIOM Framework Research License v1.0](./LICENSE) (DCK: MIT)
+**License**: Research License (core) · MIT (PSS / DCK)
 
 > 実験は忠実に実際行って
+
+本リポジトリは **AXIOM の本家（home）** として運用します。
 
 ---
 
@@ -13,7 +15,6 @@
 
 **Minimal configuration to demonstrate the core idea of AXIOM.**
 
-Not a multi-agent showcase. Not a model zoo.  
 Prototype 1.0 completes **one thing**:
 
 > Observe whether differences between projected states can be measured, reported, and (as a design hypothesis) driven toward convergence under an immutable contract.
@@ -22,68 +23,70 @@ Prototype 1.0 completes **one thing**:
 Input
   │
   ▼
-PSS          (normalize input)
+PSS          (normalize input)           — MIT
   │
   ▼
-PLP          (project → Canonical State)
+PLP          (project → Canonical State) — Research
   │
   ▼
-Capsule      (store Raw + Canonical + Dual Hash)
+Capsule      (store Raw + Canonical)     — Research
   │
   ▼
-ACP          (seal under immutable contract / HashA)
+ACP          (seal / Frame / coordinate) — Research (v1.2.0)
   │
   ▼
-DCK          (measure difference)
+DCK          (measure difference)        — MIT
   │
   ▼
 Difference Report
 ```
 
-**Parallel component**: `axiom-lrp` (LRP Kernel v2.0.0-rfc-kernel) — deterministic reasoning session runtime (Merkle chain, TransitionBuilder, CapabilityResolver, Plugin framework). Not on the core Difference Observation path above.
+**Parallel**: `axiom-lrp` (LRP Kernel) · `axiom-plp-capsule` · `axiom-pss-spec`
 
 ---
 
 ## License
 
-| Component | License |
-|-----------|---------|
-| Repository (PSS, PLP, Capsule, ACP, Runtime, LRP, docs) | **AXIOM Framework Research License v1.0** — see [`LICENSE`](./LICENSE) |
-| `axiom-dck` (Difference Convergence Kernel) | **MIT** — see [`crates/dck/LICENSE-MIT`](./crates/dck/LICENSE-MIT) |
+| Component | Crate | License |
+|-----------|-------|---------|
+| **PSS** (normalize + Problem Specification) | `axiom-pss` / `axiom-pss-spec` | **MIT** |
+| **DCK** (Difference Convergence Kernel) | `axiom-dck` | **MIT** |
+| **ACP** (Common Protocol v1.2.0) | `axiom-acp` | **Research License** |
+| **PLP** / PLP Capsule | `axiom-plp` / `axiom-plp-capsule` | **Research License** |
+| **Capsule** | `axiom-capsule` | **Research License** |
+| **LRP** | `axiom-lrp` | **Research License** |
+| **Runtime** | `axiom-runtime` | **Research License** |
 
-Research License allows personal, academic, educational, and non-commercial use with attribution.  
-**Military / harm-oriented / commercial use** requires separate permission (commercial needs a contract).
+- Research License: 個人・学術・教育・非営利可。軍事・危害目的・商用は別途許諾が必要。
+- 詳細: [`LICENSE`](./LICENSE) · MIT 各 crate の `LICENSE-MIT`
 
 ---
 
-## Priority order (build in this sequence)
+## Priority order
 
-| # | Crate | Role |
-|---|-------|------|
-| 1 | **pss** | Input normalization |
-| 2 | **plp** | State projection (not meaning parsing) |
-| 3 | **capsule** | State storage (A immutable / B projected) |
-| 4 | **acp** | Immutable contract + seal / coordinates |
-| 5 | **dck** | Difference observation (MIT) |
-| 6 | **runtime** | Wire the pipeline end-to-end |
-| — | **lrp** | Parallel: Deterministic LLM Reasoning Kernel (v2.0.0-rfc-kernel) |
-
-Research lines (PLP-R, Round Consensus, etc.) live in the main Axiom-Framework repo.  
-This Prototype reuses their contracts without mixing experiment logs into the core path.
+| # | Crate | Role | License |
+|---|-------|------|---------|
+| 1 | **pss** | Input normalization | MIT |
+| 2 | **plp** | State projection | Research |
+| 3 | **capsule** | A/B dual-hash storage | Research |
+| 4 | **acp** | Seal + Frame / coordinate (v1.2.0) | Research |
+| 5 | **dck** | Difference observation | MIT |
+| 6 | **runtime** | Pipeline wire-up | Research |
+| — | **lrp** | Reasoning kernel | Research |
+| — | **pss-spec** | Full ProblemSpecification | MIT |
+| — | **plp-capsule** | Production PLP Capsule v1.3.0 | Research |
 
 ---
 
 ## Core principles (from POLICY)
 
-| Principle | Meaning here |
-|-----------|----------------|
+| Principle | Meaning |
+|-----------|---------|
 | History is Truth | Sealed states are not rewritten |
 | Canonical is Immutable | New state ⇒ new Capsule / Seal |
 | Difference is Observable | DCK always emits measurable metrics |
 | Projection is Replaceable | Projectors are swappable |
 | Framework before Model | No vendor LLM required for the core loop |
-
-See `POLICY.md` (shared constitutional rules) and `docs/architecture.md`.
 
 ---
 
@@ -91,41 +94,25 @@ See `POLICY.md` (shared constitutional rules) and `docs/architecture.md`.
 
 ```
 axiomFramework-Prototype1.0/
-├── README.md
-├── LICENSE                 # Research License v1.0
-├── ROADMAP.md
-├── CHANGELOG.md
-├── POLICY.md
-├── docs/
+├── LICENSE                 # Research License v1.0 (+ §7 MIT components)
 ├── crates/
-│   ├── pss/ plp/ capsule/ acp/ runtime/   # Research License
-│   ├── lrp/                               # LRP Kernel v2.0.0-rfc-kernel
-│   └── dck/                               # MIT
-├── examples/
-├── tests/
-├── data/sample_inputs/
-└── tools/
+│   ├── pss/ pss-spec/      # MIT
+│   ├── dck/                # MIT
+│   ├── plp/ plp-capsule/   # Research
+│   ├── capsule/            # Research
+│   ├── acp/                # Research (v1.2.0 production)
+│   ├── lrp/                # Research
+│   └── runtime/            # Research
+├── docs/ examples/ tests/
+└── …
 ```
-
----
-
-## Success criterion (Prototype 1.0)
-
-1. Same input → same Dual Hash across at least two implementations (or locked Golden).
-2. Two Capsules → DCK emits `DualHashClass` + `DifferenceMetrics`.
-3. Pipeline runs: **Input → Difference Report** with no silent mutation of history.
-4. Divergence is **logged**, not claimed to always shrink (design hypothesis).
-
-Multi-agent personality runtime, full Round Consensus, and production PLP v2 are **out of scope** for this milestone.
 
 ---
 
 ## Related
 
-- Main research / production: [Axiom-Framework](https://github.com/kishimoto-void/Axiom-Framework)
-- PLP-R results: `docs/plp-r/` in Axiom-Framework
-- Round Consensus concept: `docs/ROUND_CONSENSUS_PROTOCOL_v0_1.md`
+- Legacy research mirror: [Axiom-Framework](https://github.com/kishimoto-void/Axiom-Framework)
 
 ---
 
-*Difference Convergence Observation — that is Prototype 1.0.*
+*Difference Convergence Observation — Prototype 1.0 is home.*
