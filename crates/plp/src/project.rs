@@ -52,10 +52,7 @@ fn split_tokens(text: &str, language: &str) -> Vec<String> {
 }
 
 fn language_of(input: &NormalizedInput) -> String {
-    input
-        .language_hint
-        .clone()
-        .unwrap_or_else(|| "en".into())
+    input.language_hint.clone().unwrap_or_else(|| "en".into())
 }
 
 fn header_from(opts: &ProjectOptions) -> ProjectionHeader {
