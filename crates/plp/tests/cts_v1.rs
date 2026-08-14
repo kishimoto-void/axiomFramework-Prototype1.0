@@ -6,8 +6,8 @@
 //! 実験は忠実に実際行って
 
 use axiom_plp::{
-    build_canonical_payload, diff_projections, dual_hash, monitor_decide_default,
-    project_minimal, project_token_only, ProjectOptions, MonitorDecisionKind, PAYLOAD_VERSION,
+    build_canonical_payload, diff_projections, dual_hash, monitor_decide_default, project_minimal,
+    project_token_only, MonitorDecisionKind, ProjectOptions, PAYLOAD_VERSION,
 };
 use axiom_pss::normalize;
 use sha2::{Digest, Sha256};
@@ -200,7 +200,11 @@ fn cts_10_difference_large_change() {
     let a = project_min("Enable review bot", "lg-a");
     let b = project_min("Disable publish pipeline", "lg-a");
     let m = diff_projections(&a, &b);
-    assert!(a.raw_hash != b.raw_hash || m.divergence > ABSOLUTE_TOLERANCE || a.canonical_hash != b.canonical_hash);
+    assert!(
+        a.raw_hash != b.raw_hash
+            || m.divergence > ABSOLUTE_TOLERANCE
+            || a.canonical_hash != b.canonical_hash
+    );
 }
 
 #[test]
