@@ -111,7 +111,7 @@ mod tests {
     fn ask_on_divergence() {
         let d = monitor_decide_default(&m(1.0), true);
         assert_eq!(d.kind, MonitorDecisionKind::AskUser);
-        assert!(d.candidates.as_ref().unwrap().len() >= 1);
+        assert!(!d.candidates.as_ref().unwrap().is_empty());
     }
 
     #[test]
