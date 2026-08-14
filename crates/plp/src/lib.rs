@@ -13,19 +13,17 @@
 //!
 //! 実験は忠実に実際行って
 
-mod hash_ser;
-mod project;
 mod diff;
+mod hash_ser;
 mod monitor;
+mod project;
 
+pub use diff::{diff_canonical, diff_projections, DifferenceMetrics};
 pub use hash_ser::{build_canonical_payload, dual_hash, sha256_hex};
+pub use monitor::{monitor_decide, monitor_decide_default, MonitorDecision, MonitorDecisionKind};
 pub use project::{
     project_minimal, project_text_minimal, project_text_token_only, project_token_only,
     ProjectOptions,
-};
-pub use diff::{diff_canonical, diff_projections, DifferenceMetrics};
-pub use monitor::{
-    monitor_decide, monitor_decide_default, MonitorDecision, MonitorDecisionKind,
 };
 
 use serde::{Deserialize, Serialize};
@@ -168,7 +166,10 @@ mod tests {
         assert_eq!(a.canonical_hash, b.canonical_hash);
         assert!(a.canonical.annotations.is_empty());
         assert_eq!(
-            a.canonical.meta.get("annotation_status").map(|s| s.as_str()),
+            a.canonical
+                .meta
+                .get("annotation_status")
+                .map(|s| s.as_str()),
             Some("none")
         );
         assert_eq!(a.canonical.version, PAYLOAD_VERSION);
@@ -189,7 +190,10 @@ mod tests {
         assert_eq!(p.canonical.language, "ja");
         assert!(!p.canonical.tokens.is_empty());
         assert_eq!(
-            p.canonical.meta.get("annotation_status").map(|s| s.as_str()),
+            p.canonical
+                .meta
+                .get("annotation_status")
+                .map(|s| s.as_str()),
             Some("canonical_projection_candidate")
         );
     }
