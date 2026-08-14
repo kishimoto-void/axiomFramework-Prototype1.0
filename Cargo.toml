@@ -8,6 +8,7 @@ members = [
     "crates/dck",
     "crates/runtime",
     "crates/lrp",
+    "crates/plp-capsule",
 ]
 default-members = ["crates/runtime"]
 
@@ -26,3 +27,8 @@ serde_json = "1"
 sha2 = "0.10"
 thiserror = "1"
 im = { version = "15", features = ["serde"] }
+ryu = "1"
+itoa = "1"
+hex = "0.4"
+uuid = { version = "1", features = ["v4"] }
+blake3 = "1"
