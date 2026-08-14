@@ -1,0 +1,116 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_TERM_COLOR: always
+  RUSTFLAGS: -Dwarnings
+
+jobs:
+  # --------------------------------------------------------------------------
+  # 1) Format
+  # --------------------------------------------------------------------------
+  fmt:
+    name: cargo fmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust (stable + rustfmt)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - name: fmt --check
+        run: cargo fmt --all -- --check
+
+  # --------------------------------------------------------------------------
+  # 2) Clippy
+  # --------------------------------------------------------------------------
+  clippy:
+    name: cargo clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust (stable + clippy)
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: clippy (workspace, deny warnings)
+        run: cargo clippy --workspace --all-targets -- -D warnings
+
+  # --------------------------------------------------------------------------
+  # 3) Unit / integration tests
+  # --------------------------------------------------------------------------
+  test:
+    name: cargo test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: test (workspace)
+        run: cargo test --workspace --all-targets
+
+  # --------------------------------------------------------------------------
+  # 4) AXIOM Conformance Test Suite v1.0 (gate)
+  # --------------------------------------------------------------------------
+  cts:
+    name: CTS v1.0 (Full)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust (stable)
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo
+        uses: Swatinem/rust-cache@v2
+
+      - name: Conformance Suite
+        run: cargo test -p axiom-plp --test cts_v1 -- --nocapture
+
+      - name: Golden Lock present
+        run: |
+          test -f tests/golden_vectors/PLP_R_GOLDEN_LOCK_v0_1.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          doc = json.loads(Path("tests/golden_vectors/PLP_R_GOLDEN_LOCK_v0_1.json").read_text())
+          assert doc.get("schema_version") == "1.0", doc.get("schema_version")
+          assert doc.get("cts_version") == "1.0.0", doc.get("cts_version")
+          assert doc.get("hash_algorithm") == "sha256"
+          vectors = doc.get("vectors") or doc
+          assert len(vectors) == 4
+          print("Golden Lock OK:", doc.get("lock_version"), "vectors=", len(vectors))
+          PY
+
+  # --------------------------------------------------------------------------
+  # Aggregate gate (required checks can point here)
+  # --------------------------------------------------------------------------
+  ci-success:
+    name: CI success
+    runs-on: ubuntu-latest
+    needs: [fmt, clippy, test, cts]
+    steps:
+      - name: All jobs passed
+        run: echo "fmt + clippy + test + CTS Full — PASS"
