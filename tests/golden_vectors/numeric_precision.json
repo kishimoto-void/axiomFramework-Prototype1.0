@@ -1,0 +1,39 @@
+{
+  "id": "06_numeric_precision",
+  "version": "1.0.0",
+  "purpose": "小数精度の正規化後に Hash が決定論的であること。",
+  "pipeline_focus": ["PSS", "PLP", "Capsule"],
+  "category": "numeric_precision",
+  "input": {
+    "pairs": [
+      {
+        "a": 0.1 + 0.2,
+        "b": 0.3,
+        "note": "古典的な浮動小数点誤差。正規化後に同一と扱うか、または一貫した表現にする"
+      },
+      {
+        "a": 1.0000000000000002,
+        "b": 1.0,
+        "note": "machine epsilon 近傍"
+      }
+    ],
+    "serialization_policy": "canonical numeric representation (e.g. ryu / consistent string form)"
+  },
+  "assertions": [
+    {
+      "name": "precision_normalized_hash",
+      "description": "正規化ポリシー適用後の Hash が安定",
+      "expected": {
+        "same_after_normalization": true
+      }
+    },
+    {
+      "name": "no_platform_dependent_float",
+      "description": "言語・アーキテクチャに依存しない表現",
+      "expected": {
+        "cross_language_identical_representation": true
+      }
+    }
+  ],
+  "notes": "ryu / itoa 等の決定論的数値シリアライザを前提。言語ごとの to_string() の違いを吸収する。"
+}

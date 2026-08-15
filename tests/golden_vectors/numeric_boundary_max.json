@@ -1,0 +1,37 @@
+{
+  "id": "05_numeric_boundary_max",
+  "version": "1.0.0",
+  "purpose": "数値上限境界値の処理が決定論的であること。",
+  "pipeline_focus": ["PSS", "PLP", "DCK"],
+  "category": "numeric_boundary",
+  "input": {
+    "cases": [
+      {
+        "name": "one",
+        "value": 1.0,
+        "context": "overlap_ratio / normalized metric ceiling"
+      },
+      {
+        "name": "slightly_over_one",
+        "value": 1.0000000001,
+        "context": "should be clamped or reported consistently"
+      },
+      {
+        "name": "large",
+        "value": 1e6,
+        "context": "raw divergence が極端に大きい場合の扱い"
+      }
+    ]
+  },
+  "assertions": [
+    {
+      "name": "upper_bound_determinism",
+      "description": "上限近傍の値で常に同じ正規化・報告を行う",
+      "expected": {
+        "stable_hash_or_metric": true,
+        "no_overflow_to_inf": true
+      }
+    }
+  ],
+  "notes": "上限側の数値安定性を固定。DCK の divergence / overlap が 0..1 に正規化される前提を守る。"
+}

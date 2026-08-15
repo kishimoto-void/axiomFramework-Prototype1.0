@@ -1,0 +1,47 @@
+{
+  "id": "07_unicode_normalization",
+  "version": "1.0.0",
+  "purpose": "Unicode 正規化（NFC/NFD 等）後の Canonical 表現が同一になること。",
+  "pipeline_focus": ["PSS", "PLP", "Capsule"],
+  "category": "unicode",
+  "input": {
+    "pairs": [
+      {
+        "name": "composed_vs_decomposed",
+        "nfc": "が",
+        "nfd": "か\u3099",
+        "note": "ひらがな「が」の合成・分解形"
+      },
+      {
+        "name": "fullwidth_halfwidth",
+        "full": "ＡＢＣ",
+        "half": "ABC",
+        "note": "必要に応じて正規化ポリシーを固定（現時点では raw を尊重しつつ Canonical で揃える）"
+      },
+      {
+        "name": "japanese_sentence",
+        "text_nfc": "猫が机の上で寝ている。",
+        "text_variant": "猫が机の上で寝ている。"
+      }
+    ],
+    "policy": "PSS normalize で Unicode 正規形を統一し、以降の Hash は正規化後テキストに対して計算"
+  },
+  "assertions": [
+    {
+      "name": "nfc_nfd_identity_after_normalize",
+      "description": "正規化後は同一文字列・同一 Hash",
+      "expected": {
+        "canonical_hash_equal": true
+      }
+    },
+    {
+      "name": "no_surrogate_or_invalid",
+      "description": "不正な Unicode シーケンスを安全に扱う",
+      "expected": {
+        "no_panic": true,
+        "deterministic_error_or_replacement": true
+      }
+    }
+  ],
+  "notes": "日本語を含む入力が多いため、Unicode 正規化の一貫性は特に重要。PSS の normalize が最初の関門。"
+}

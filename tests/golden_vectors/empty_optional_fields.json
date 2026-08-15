@@ -1,0 +1,35 @@
+{
+  "id": "08_empty_optional_fields",
+  "version": "1.0.0",
+  "purpose": "Optional フィールドが空（空配列・空オブジェクト・null）の場合と、フィールド自体が省略された場合の扱いを固定する。",
+  "pipeline_focus": ["PSS", "PLP", "Capsule", "ACP"],
+  "category": "optional_fields",
+  "input": {
+    "present_empty": {
+      "annotations": [],
+      "meta": {},
+      "constraint_id": null
+    },
+    "omitted": {
+      "description": "annotations / meta / constraint_id をキーごと持たない"
+    },
+    "policy": "Canonical serialization では、空と省略をどう扱うかを仕様で固定する（BTreeMap のキー有無）"
+  },
+  "assertions": [
+    {
+      "name": "empty_vs_omitted_policy",
+      "description": "仕様で定めたポリシーに従い、Hash が一致または意図的に異なる",
+      "expected": {
+        "policy_documented_and_stable": true
+      }
+    },
+    {
+      "name": "no_null_leak_into_hash",
+      "description": "null や空コレクションが予期しないキーを Hash 材料に含めない",
+      "expected": {
+        "canonical_keys_stable": true
+      }
+    }
+  ],
+  "notes": "JSON の optional 扱いの微妙な差が Hash を壊しやすい。ここに観測点を置くことで、シリアライザ変更の影響を早期に検知する。"
+}

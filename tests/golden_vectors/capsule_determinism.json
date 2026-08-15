@@ -1,0 +1,34 @@
+{
+  "id": "09_capsule_determinism",
+  "version": "1.0.0",
+  "purpose": "同一の Projection から Capsule を再生成しても、hash_a / hash_b が完全に一致すること。",
+  "pipeline_focus": ["PLP", "Capsule"],
+  "category": "capsule",
+  "input": {
+    "projection_source": {
+      "raw_text": "Enable review bot for pull requests",
+      "id": "capsule-det-01",
+      "projector": "minimal-v0.1"
+    },
+    "regeneration_count": 5
+  },
+  "assertions": [
+    {
+      "name": "capsule_from_projection_stable",
+      "description": "Capsule::from_projection を複数回呼んでも同一",
+      "expected": {
+        "hash_a_identical": true,
+        "hash_b_identical": true,
+        "id_preserved": true
+      }
+    },
+    {
+      "name": "dual_hash_snapshot_from_capsule",
+      "description": "DualHashSnapshot::from_capsule も安定",
+      "expected": {
+        "snapshot_reproducible": true
+      }
+    }
+  ],
+  "notes": "Capsule は A/B の橋渡し。ここが非決定的だと ACP / DCK のすべてが崩れる。"
+}
