@@ -1,0 +1,40 @@
+{
+  "id": "03_input_order_stability",
+  "version": "1.0.0",
+  "purpose": "入力のフィールド順序やトークン順序が異なっても、Canonical化後は同一 Hash になること。",
+  "pipeline_focus": ["PSS", "PLP", "Capsule"],
+  "category": "canonicalization",
+  "input": {
+    "variant_a": {
+      "description": "フィールド順 A",
+      "raw_text": "cat sleeps on table",
+      "meta_order": ["language", "tokens", "annotations"]
+    },
+    "variant_b": {
+      "description": "フィールド順 B（異なる順）",
+      "raw_text": "cat sleeps on table",
+      "meta_order": ["annotations", "tokens", "language"]
+    },
+    "token_order_variant": {
+      "description": "同じ意味だが内部表現の順序が異なる可能性のあるケース",
+      "raw_text": "on table cat sleeps"
+    }
+  },
+  "assertions": [
+    {
+      "name": "canonical_hash_identity",
+      "description": "Canonical 表現後の Hash が variant 間で一致する",
+      "expected": {
+        "canonical_hash_equal_across_order": true
+      }
+    },
+    {
+      "name": "raw_may_differ",
+      "description": "raw_hash は入力文字列が異なれば変わってよい（決定性は raw 文字列そのものに対して）",
+      "expected": {
+        "raw_hash_follows_raw_text": true
+      }
+    }
+  ],
+  "notes": "Canonical 層の安定性を固定。BTreeMap / ソートキーによる順序非依存を保証。"
+}

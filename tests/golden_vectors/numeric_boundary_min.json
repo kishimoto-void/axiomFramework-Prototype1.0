@@ -1,0 +1,44 @@
+{
+  "id": "04_numeric_boundary_min",
+  "version": "1.0.0",
+  "purpose": "数値下限境界値の処理が決定論的であること。",
+  "pipeline_focus": ["PSS", "PLP", "DCK"],
+  "category": "numeric_boundary",
+  "input": {
+    "cases": [
+      {
+        "name": "zero",
+        "value": 0.0,
+        "context": "divergence or overlap metric floor"
+      },
+      {
+        "name": "negative_small",
+        "value": -1e-12,
+        "context": "should be clamped or treated as near-zero according to policy"
+      },
+      {
+        "name": "absolute_tolerance_floor",
+        "value": 1e-9,
+        "context": "ABSOLUTE_TOLERANCE との関係"
+      }
+    ]
+  },
+  "assertions": [
+    {
+      "name": "boundary_determinism",
+      "description": "同じ境界値入力に対して常に同じ正規化結果・Hash を返す",
+      "expected": {
+        "stable_hash": true,
+        "no_nan_or_inf": true
+      }
+    },
+    {
+      "name": "tolerance_consistent",
+      "description": "CTS の ABSOLUTE_TOLERANCE = 1e-9 と整合する扱い",
+      "expected": {
+        "near_zero_treated_consistently": true
+      }
+    }
+  ],
+  "notes": "数値の下限処理を固定。浮動小数点の特殊値やクランプポリシーが後から変わらないようにする。"
+}
