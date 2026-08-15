@@ -28,7 +28,6 @@ use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
 use std::io::Write;
 use std::sync::Arc;
-use std::time::{SystemTime, UNIX_EPOCH};
 use thiserror::Error;
 
 #[cfg(feature = "sha2-hash")]
@@ -415,13 +414,6 @@ fn default_version() -> String {
 }
 fn default_source() -> String {
     "system".to_string()
-}
-
-fn now_ns() -> u128 {
-    SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .map(|d| d.as_nanos())
-        .unwrap_or(0)
 }
 
 #[inline]

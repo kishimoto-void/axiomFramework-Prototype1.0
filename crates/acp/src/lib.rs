@@ -293,7 +293,7 @@ impl<'a, H: StreamHasher> JcsStreamWriter<'a, H> {
 
     fn write_number(&mut self, n: &serde_json::Number) -> Result<()> {
         if let Some(i) = n.as_i64() {
-            if i > MAX_SAFE_INTEGER || i < MIN_SAFE_INTEGER {
+            if !(MIN_SAFE_INTEGER..=MAX_SAFE_INTEGER).contains(&i) {
                 return Err(AxiomError::IntegerPrecisionLoss(i.to_string()));
             }
             let s = i.to_string();
