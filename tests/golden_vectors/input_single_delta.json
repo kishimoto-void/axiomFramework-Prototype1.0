@@ -1,0 +1,36 @@
+{
+  "id": "02_input_single_delta",
+  "version": "1.0.0",
+  "purpose": "入力の1箇所変更が Hash と Difference に反映されること。",
+  "pipeline_focus": ["PSS", "PLP", "DCK"],
+  "category": "sensitivity",
+  "input": {
+    "baseline": {
+      "raw_text": "Enable review bot for pull requests",
+      "id": "delta-base"
+    },
+    "delta": {
+      "raw_text": "Enable review bots for pull requests",
+      "id": "delta-changed",
+      "change": "bot → bots (single token pluralization)"
+    }
+  },
+  "assertions": [
+    {
+      "name": "hash_changes",
+      "description": "baseline と delta で raw_hash または canonical_hash が異なる",
+      "expected": {
+        "hash_a_differs_or_hash_b_differs": true
+      }
+    },
+    {
+      "name": "difference_detected",
+      "description": "DCK が non-zero difference を報告する",
+      "expected": {
+        "divergence_gt_zero": true,
+        "kind_not_none": true
+      }
+    }
+  ],
+  "notes": "感度確認。過度に鈍感でも過敏でもいけない。単一トークン変更で検出されることを固定。"
+}

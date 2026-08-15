@@ -1,0 +1,33 @@
+{
+  "id": "01_baseline_identity",
+  "version": "1.0.0",
+  "purpose": "基準入力の決定性確認。同一入力を複数回処理しても Hash が完全に一致すること。",
+  "pipeline_focus": ["PSS", "PLP", "Capsule"],
+  "category": "determinism",
+  "input": {
+    "raw_text": "Enable review bot for pull requests",
+    "language": "en",
+    "projector": "minimal-v0.1",
+    "id": "baseline-01"
+  },
+  "assertions": [
+    {
+      "name": "identical_hash_on_repeat",
+      "description": "同一入力を N 回処理したとき、raw_hash と canonical_hash がすべて同一",
+      "expected": {
+        "raw_hash_stable": true,
+        "canonical_hash_stable": true,
+        "hash_length": 64
+      }
+    },
+    {
+      "name": "capsule_identity",
+      "description": "生成された Capsule の hash_a / hash_b が決定論的",
+      "expected": {
+        "hash_a_equals_raw_hash": true,
+        "hash_b_equals_canonical_hash": true
+      }
+    }
+  ],
+  "notes": "Prototype の最も基本的な決定性観測点。これが壊れたら上位すべてが無効になる。"
+}
