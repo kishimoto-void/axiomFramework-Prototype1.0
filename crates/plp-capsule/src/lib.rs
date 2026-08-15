@@ -167,6 +167,13 @@ impl<D: Digest> HasherWriter<D> {
 }
 
 #[cfg(feature = "sha2-hash")]
+impl<D: Digest> Default for HasherWriter<D> {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+#[cfg(feature = "sha2-hash")]
 impl<D: Digest> Write for HasherWriter<D> {
     #[inline]
     fn write(&mut self, buf: &[u8]) -> std::io::Result<usize> {
@@ -195,6 +202,13 @@ impl Blake3HasherWriter {
 
     pub fn finish_hex(self) -> String {
         self.hasher.finalize().to_hex().to_string()
+    }
+}
+
+#[cfg(feature = "blake3-hash")]
+impl Default for Blake3HasherWriter {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -478,10 +492,12 @@ fn write_canonical_f64<W: Write + ?Sized>(out: &mut W, val: f64) -> Result<(), C
     }
     let mut buf = ryu::Buffer::new();
     let s = buf.format_finite(val);
+    // Clippy: sliced_string_as_bytes — prefer as_bytes() once then index
     if let Some(pos) = s.find("e+") {
-        out.write_all(s[..pos + 1].as_bytes())
+        let bytes = s.as_bytes();
+        out.write_all(&bytes[..pos + 1])
             .map_err(CapsuleError::io)?;
-        out.write_all(s[pos + 2..].as_bytes())
+        out.write_all(&bytes[pos + 2..])
             .map_err(CapsuleError::io)?;
     } else {
         out.write_all(s.as_bytes()).map_err(CapsuleError::io)?;
