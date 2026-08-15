@@ -1,0 +1,44 @@
+{
+  "id": "10_acp_hash_a_invariance",
+  "version": "1.0.0",
+  "purpose": "不変規則（Hash A）が、観測状態（Hash B）の変更によって変化しないこと。",
+  "pipeline_focus": ["Capsule", "ACP", "DCK"],
+  "category": "hash_a_invariance",
+  "input": {
+    "contract": {
+      "description": "同じ不変契約（規則・制約）",
+      "raw_text_or_contract": "Enable review bot for pull requests",
+      "role": "Hash A source (raw / sealed contract)"
+    },
+    "observations": [
+      {
+        "name": "observation_1",
+        "description": "初期観測（Semantic projection）",
+        "canonical_variant": "minimal projection of the same text"
+      },
+      {
+        "name": "observation_2",
+        "description": "異なる観測（例: 別 projector や 別解釈）",
+        "canonical_variant": "token_only or different annotation set on same raw"
+      }
+    ]
+  },
+  "assertions": [
+    {
+      "name": "hash_a_unchanged",
+      "description": "観測を変えても Hash A（raw_hash / contract_hash_a）は同一",
+      "expected": {
+        "hash_a_equal": true,
+        "hash_b_may_differ": true
+      }
+    },
+    {
+      "name": "acp_seal_preserves_a",
+      "description": "ACP の seal / proof が Hash A を封印し、B の変更で A が書き換わらない",
+      "expected": {
+        "sealed_hash_a_stable": true
+      }
+    }
+  ],
+  "notes": "AXIOM の核心。「不変な契約」と「変化する観測」を同一 Hash に混ぜない、という設計思想を機械的に検証する観測点。"
+}

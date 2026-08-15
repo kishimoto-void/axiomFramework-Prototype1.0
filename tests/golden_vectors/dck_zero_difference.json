@@ -1,0 +1,38 @@
+{
+  "id": "12_dck_zero_difference",
+  "version": "1.0.0",
+  "purpose": "完全に同一の DualHashSnapshot に対して、difference = 0 / converged と判定されること。",
+  "pipeline_focus": ["DCK"],
+  "category": "convergence",
+  "input": {
+    "snapshot_a": {
+      "hash_a": "identical-contract-hash",
+      "hash_b": "identical-observation-hash",
+      "source": "same Capsule regenerated twice"
+    },
+    "snapshot_b": {
+      "hash_a": "identical-contract-hash",
+      "hash_b": "identical-observation-hash"
+    }
+  },
+  "assertions": [
+    {
+      "name": "zero_difference",
+      "description": "evaluate / diff の結果が zero",
+      "expected": {
+        "divergence": 0.0,
+        "overlap_ratio": 1.0,
+        "kind": "None",
+        "converged": true
+      }
+    },
+    {
+      "name": "monitor_continue",
+      "description": "Monitor が Continue を返す（差異なし）",
+      "expected": {
+        "decision": "Continue"
+      }
+    }
+  ],
+  "notes": "DCK の「何も変わっていない」ケースの基準点。ここが false positive を出すと信頼性が崩れる。"
+}

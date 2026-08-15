@@ -1,0 +1,52 @@
+{
+  "id": "11_acp_hash_b_variation",
+  "version": "1.0.0",
+  "purpose": "同じ規則（Hash A）の下で、観測状態だけを変えたときに Hash B のみが変化すること。",
+  "pipeline_focus": ["Capsule", "ACP", "DCK"],
+  "category": "hash_b_variation",
+  "input": {
+    "fixed_hash_a_source": {
+      "raw_text": "Enable review bot for pull requests",
+      "id": "fixed-a"
+    },
+    "varying_b": [
+      {
+        "name": "b1_minimal",
+        "projector": "minimal-v0.1"
+      },
+      {
+        "name": "b2_token_only",
+        "projector": "token_only"
+      },
+      {
+        "name": "b3_with_extra_annotation",
+        "projector": "minimal-v0.1",
+        "extra": "additional annotation that affects canonical only"
+      }
+    ]
+  },
+  "assertions": [
+    {
+      "name": "hash_a_constant",
+      "description": "すべての variant で Hash A が同一",
+      "expected": {
+        "all_hash_a_equal": true
+      }
+    },
+    {
+      "name": "hash_b_differs_when_observation_differs",
+      "description": "観測が異なれば Hash B が異なる",
+      "expected": {
+        "at_least_one_hash_b_differs": true
+      }
+    },
+    {
+      "name": "dck_classifies_as_semantic",
+      "description": "A same / B changed → DifferenceKind::Semantic（または相当）",
+      "expected": {
+        "kind": "Semantic"
+      }
+    }
+  ],
+  "notes": "10 と対になる観測点。DualHash の A×B 行列（same/changed）を正しく分類できることを固定する。"
+}

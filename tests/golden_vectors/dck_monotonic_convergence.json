@@ -1,0 +1,72 @@
+{
+  "id": "13_dck_monotonic_convergence",
+  "version": "1.0.0",
+  "purpose": "段階的に差異が減少し、最終的に 0 に収束する系列を固定する。DCK の基本挙動の観測点。",
+  "pipeline_focus": ["DCK"],
+  "category": "monotonic_convergence",
+  "input": {
+    "sequence": [
+      {
+        "step": 0,
+        "label": "baseline",
+        "description": "初期状態（目標）",
+        "role": "target"
+      },
+      {
+        "step": 1,
+        "label": "large_difference",
+        "description": "大きく乖離した推定",
+        "expected_relative": "large"
+      },
+      {
+        "step": 2,
+        "label": "medium_difference",
+        "description": "中程度の乖離",
+        "expected_relative": "medium"
+      },
+      {
+        "step": 3,
+        "label": "small_difference",
+        "description": "小さな乖離",
+        "expected_relative": "small"
+      },
+      {
+        "step": 4,
+        "label": "zero_difference",
+        "description": "完全一致",
+        "expected_relative": "zero"
+      }
+    ],
+    "construction_hint": {
+      "method": "同一 Hash A の下で、Hash B（または projection tokens / annotations）を段階的に target に近づける",
+      "example_path": "baseline text → largely rewritten → partially corrected → almost correct → identical"
+    }
+  },
+  "assertions": [
+    {
+      "name": "monotonic_decrease",
+      "description": "step 1 → 2 → 3 → 4 で divergence が単調に減少する（または非増加）",
+      "expected": {
+        "divergence_sequence": ["large", "medium", "small", "0.0"],
+        "strict_or_non_increasing": true
+      }
+    },
+    {
+      "name": "final_converged",
+      "description": "最終ステップで diff = 0 / converged",
+      "expected": {
+        "final_divergence": 0.0,
+        "final_kind": "None",
+        "converged": true
+      }
+    },
+    {
+      "name": "hash_a_constant_throughout",
+      "description": "系列全体で Hash A は不変",
+      "expected": {
+        "all_hash_a_equal": true
+      }
+    }
+  ],
+  "notes": "Prototype として最も AXIOM らしい観測点。\n\nbaseline\n   ↓\ndifference = large\n   ↓\ndifference = medium\n   ↓\ndifference = small\n   ↓\ndifference = 0\n\nこれを Golden Vector として固定しておけば、「差異を観測して収束を判定する」という DCK の基本挙動が将来の変更で壊れていないかを CI で毎回確認できる。"
+}
