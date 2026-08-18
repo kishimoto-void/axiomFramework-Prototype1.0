@@ -86,7 +86,7 @@ fn sha256_hex(bytes: &[u8]) -> String {
 pub fn generate_deterministic_id(seed: &str, count: u32) -> String {
     let raw = format!("{}-{}", seed, count);
     let hash_prefix = &sha256_hex(raw.as_bytes())[..16]; // 64-bit Hex Prefix
-    format!("#{"4}-{}", count + 1, hash_prefix)
+    format!("#"{:04}"-{}", count + 1, hash_prefix)
 }
 
 #[derive(Debug)]
