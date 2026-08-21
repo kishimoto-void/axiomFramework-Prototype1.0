@@ -5,33 +5,33 @@ Impurity-Aware Multi-Agent System (Go prototypes)
 ## Files
 
 ### v3.2.2 (current)
-- `axiom_mas_v3.2.2_AbsoluteAnchor.go` — Dual Hash + **AbsoluteAnchor** (HashA as coordinate frame) + Human Gate
-  - AbsoluteAnchor: problem / C / constraints / skeleton / seed → fixed HashA (time-independent)
-  - Invariant constraint: `lawful:simulation_must_not_violate_law` (シミュレーションであっても法を犯さない)
-  - 12-round protocol: provisional (R0–5) → R7 alignment → formal (R6–11)
-  - Observer feasibility: possible / impossible / ask_human
-  - Human decisions: adopt → Confirmed only; impossible cannot be adopted
+- `axiom_mas_v3.2.2_AbsoluteAnchor.go` — Dual Hash + **AbsoluteAnchor** + Human Gate  
+  (full source: see experiment report + conversation artifact; if only `.b64.part*` are present, run `bash restore_go.sh`)
 - `MAS_Experiment_Report_v3.2.2.md` — Experiment report (knowledge-bot answer policy)
+- `restore_go.sh` — restores Go source from base64+gzip parts if used
 
 ### v2.7 (legacy)
-- `axiom_mas_v27.go` — Homeostasis Purifier with Impurity Blacklist / Resource Penalty
-- `axiom-mas-v27-experiment-zenn.md` — 10-round experiment notes
+- `axiom_mas_v27.go`
+- `axiom-mas-v27-experiment-zenn.md`
 
 ## Quick run (v3.2.2)
 
 ```bash
+# If using compressed parts:
+bash restore_go.sh
 go run axiom_mas_v3.2.2_AbsoluteAnchor.go
 ```
 
-## v3.2.2 experiment highlights
+## v3.2.2 highlights
 
-- AbsoluteAnchor continuity across 12 capsules: same HashA
-- R7 alignment: matched axes include `law`; deviation 0
-- Confirmed accumulation via human adopt (not threshold alone): confirmed=4 at end
-- Best / Semi-best contraction logged after formal phase
+- AbsoluteAnchor continuity (same HashA across 12 capsules)
+- Invariant: `lawful:simulation_must_not_violate_law`
+- R7 alignment includes `law` axis
+- Human Gate: possible / impossible / ask_human → adopt → Confirmed
+- Experiment end state: confirmed=4
 
 ## Design notes
 
-- HashA = coordinate frame (absolute reference)
-- HashB = trajectory (relative state)
-- Confirmed ≔ human-adopted facts inside the AbsoluteAnchor
+- HashA = coordinate frame
+- HashB = trajectory
+- Confirmed ≔ human-adopted facts inside AbsoluteAnchor
